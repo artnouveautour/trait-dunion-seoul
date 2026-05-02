@@ -92,12 +92,12 @@ import Site from '../layouts/Site.astro';
     </div>
 </section>
 
-<!-- BOOKING CALENDAR -->
+<!-- BOOKING CALENDAR + OPTIONS -->
 <section class="booking-section">
     <div class="booking-section-head reveal">
-        <div class="section-eyebrow">Calendrier</div>
-        <h2>예약 가능 <span class="it">날짜</span></h2>
-        <p class="booking-subtitle">월요일은 베르사유 궁전 휴궁일입니다. 그 외 날짜에서 원하시는 일정을 선택해주세요.</p>
+        <div class="section-eyebrow">Réservation</div>
+        <h2>예약 <span class="it">하기</span></h2>
+        <p class="booking-subtitle">월요일은 베르사유 궁전 휴궁일입니다. 원하시는 날짜를 선택하시고 인원·연락처를 입력해주세요.</p>
     </div>
 
     <div class="booking-calendar reveal" id="bookingCalendar">
@@ -115,19 +115,102 @@ import Site from '../layouts/Site.astro';
             <span class="cal-legend-item"><span class="cal-legend-dot dot-closed"></span>휴궁일 (월요일)</span>
             <span class="cal-legend-item"><span class="cal-legend-dot dot-past"></span>지난 날짜</span>
         </div>
-        <p class="cal-foot">날짜를 선택하시면 견적 요청 폼으로 이동합니다. 정확한 시간·인원은 폼에서 알려주세요.</p>
+    </div>
+
+    <div class="booking-options" id="bookingOptions">
+        <div class="booking-options-head">
+            <h3>예약 정보 입력</h3>
+            <span class="selected-date" id="selectedDateLabel"></span>
+        </div>
+
+        <form id="bookingForm">
+            <input type="hidden" name="service" value="versailles" />
+            <input type="hidden" name="date" id="bookingDate" />
+            <input type="hidden" name="duration" value="2시간 (1부 가이드 + 2부 자유 산책 · 정확한 시간은 예약 확정 시 협의)" />
+
+            <div class="bo-row two-col">
+                <div>
+                    <label for="boName">성함 *</label>
+                    <input type="text" id="boName" name="name" required maxlength="60" autocomplete="name" />
+                </div>
+                <div>
+                    <label for="boPeople">인원</label>
+                    <div class="qty-stepper">
+                        <button type="button" id="boQtyMinus" aria-label="인원 감소">−</button>
+                        <input type="number" id="boPeople" name="people" value="2" min="1" max="6" readonly />
+                        <button type="button" id="boQtyPlus" aria-label="인원 증가">+</button>
+                    </div>
+                    <span class="qty-hint">7명 이상은 메시지로 알려주세요</span>
+                </div>
+            </div>
+
+            <div class="bo-row two-col">
+                <div>
+                    <label for="boEmail">이메일 *</label>
+                    <input type="email" id="boEmail" name="email" required autocomplete="email" />
+                </div>
+                <div>
+                    <label for="boKakao">카카오톡 ID (선택)</label>
+                    <input type="text" id="boKakao" name="kakao" maxlength="60" />
+                </div>
+            </div>
+
+            <div class="bo-row">
+                <label for="boMessage">추가 요청 사항 (선택)</label>
+                <textarea id="boMessage" name="message" placeholder="원하시는 시작 시간, 동행자 특이사항(어린이·연세 있으신 분·휠체어 등), 입장권 무료 대상자 여부, 이동 수단 등 자유롭게 알려주세요."></textarea>
+            </div>
+
+            <div class="bo-summary">
+                <div class="bo-summary-row">
+                    <span>가이드 동행 (인당 ₩54,000)</span>
+                    <span><span id="boSummaryQty">2</span>명 × ₩54,000</span>
+                </div>
+                <div class="bo-summary-row total">
+                    <span>합계</span>
+                    <strong id="boSummaryTotal">₩108,000</strong>
+                </div>
+                <p class="bo-summary-note">베르사유 궁전 입장권(€21–€32)과 RER 기차비는 별도. 입장권은 가이드가 그룹 예약으로 대행 구매해드리며, 투어 이틀 전 단톡방에서 안내드리는 한화 계좌로 입금하시면 됩니다. 정확한 시작 시간은 예약 확정 후 별도 협의합니다.</p>
+            </div>
+
+            <button type="submit" class="bo-submit" id="boSubmit">예약하기</button>
+
+            <div class="bo-error" id="boError"></div>
+            <div class="bo-success" id="boSuccess">
+                예약 문의가 접수되었습니다.<br>
+                24시간 내에 입력하신 이메일로 시간 확정 + 입금 안내를 회신드리겠습니다. 감사합니다.
+            </div>
+        </form>
     </div>
 </section>
 
 <script is:inline>
 (function () {
+  var PRICE_PER_PERSON = 54000;
   var today = new Date();
   today.setHours(0, 0, 0, 0);
   var current = new Date(today.getFullYear(), today.getMonth(), 1);
   var maxMonth = new Date(today.getFullYear(), today.getMonth() + 12, 1);
+  var selected = null;
+  var blackouts = new Set();
+
+  // 차단 날짜 fetch (실패해도 캘린더는 표시)
+  fetch('/api/blackouts/list-public')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) {
+      if (j && j.ok && Array.isArray(j.items)) {
+        blackouts = new Set(j.items.map(function (i) { return i.date; }));
+        render();
+      }
+    })
+    .catch(function () { /* noop */ });
 
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
   function ymd(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function fmtKRW(n) { return '₩' + n.toLocaleString('en-US'); }
+  function fmtDateLabel(d) {
+    var dow = ['일','월','화','수','목','금','토'][d.getDay()];
+    return d.getFullYear() + '년 ' + (d.getMonth() + 1) + '월 ' + d.getDate() + '일 (' + dow + ')';
+  }
 
   function render() {
     var label = document.getElementById('calMonthLabel');
@@ -164,10 +247,21 @@ import Site from '../layouts/Site.astro';
         cell = document.createElement('span');
         cell.className = 'cal-day cal-closed';
         status = '휴궁일';
+      } else if (blackouts.has(ymd(d))) {
+        cell = document.createElement('span');
+        cell.className = 'cal-day cal-closed';
+        status = '예약 불가';
       } else {
-        cell = document.createElement('a');
-        cell.href = '/contact?service=versailles&date=' + ymd(d);
+        cell = document.createElement('button');
+        cell.type = 'button';
         cell.className = 'cal-day cal-available';
+        cell.dataset.date = ymd(d);
+        if (selected && cell.dataset.date === selected) {
+          cell.classList.add('cal-selected');
+        }
+        cell.addEventListener('click', (function (date, dateStr) {
+          return function () { selectDate(date, dateStr); };
+        })(d, ymd(d)));
         status = '예약 가능';
       }
       cell.setAttribute('aria-label', (d.getMonth() + 1) + '월 ' + day + '일 — ' + status);
@@ -186,6 +280,29 @@ import Site from '../layouts/Site.astro';
     }
   }
 
+  function selectDate(d, dateStr) {
+    selected = dateStr;
+    document.getElementById('bookingDate').value = dateStr;
+    document.getElementById('selectedDateLabel').textContent = fmtDateLabel(d);
+    var panel = document.getElementById('bookingOptions');
+    panel.classList.add('active');
+    // 캘린더에서 selected 표시 갱신
+    Array.prototype.forEach.call(document.querySelectorAll('.cal-day.cal-selected'), function (el) {
+      el.classList.remove('cal-selected');
+    });
+    var sel = document.querySelector('.cal-day[data-date="' + dateStr + '"]');
+    if (sel) sel.classList.add('cal-selected');
+    // 패널까지 스크롤
+    setTimeout(function () { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+  }
+
+  function updateSummary() {
+    var qty = parseInt(document.getElementById('boPeople').value, 10) || 1;
+    document.getElementById('boSummaryQty').textContent = qty;
+    document.getElementById('boSummaryTotal').textContent = fmtKRW(qty * PRICE_PER_PERSON);
+  }
+
+  // 캘린더 네비게이션
   document.getElementById('calPrev').addEventListener('click', function () {
     current = new Date(current.getFullYear(), current.getMonth() - 1, 1);
     render();
@@ -194,6 +311,64 @@ import Site from '../layouts/Site.astro';
     current = new Date(current.getFullYear(), current.getMonth() + 1, 1);
     render();
   });
+
+  // 인원 stepper
+  var qtyMinus = document.getElementById('boQtyMinus');
+  var qtyPlus = document.getElementById('boQtyPlus');
+  var qtyInput = document.getElementById('boPeople');
+  function setQty(n) {
+    if (n < 1) n = 1;
+    if (n > 6) n = 6;
+    qtyInput.value = n;
+    qtyMinus.disabled = n <= 1;
+    qtyPlus.disabled = n >= 6;
+    updateSummary();
+  }
+  qtyMinus.addEventListener('click', function () { setQty(parseInt(qtyInput.value, 10) - 1); });
+  qtyPlus.addEventListener('click', function () { setQty(parseInt(qtyInput.value, 10) + 1); });
+  setQty(parseInt(qtyInput.value, 10));
+
+  // 폼 제출 → /api/bookings/submit
+  var form = document.getElementById('bookingForm');
+  var success = document.getElementById('boSuccess');
+  var errorBox = document.getElementById('boError');
+  var submitBtn = document.getElementById('boSubmit');
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    errorBox.style.display = 'none';
+    if (!document.getElementById('bookingDate').value) {
+      errorBox.textContent = '캘린더에서 날짜를 먼저 선택해주세요.';
+      errorBox.style.display = 'block';
+      return;
+    }
+    var data = Object.fromEntries(new FormData(form));
+    submitBtn.disabled = true;
+    submitBtn.textContent = '전송 중...';
+    try {
+      var res = await fetch('/api/bookings/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      var json = await res.json();
+      if (res.ok && json.ok) {
+        success.classList.add('active');
+        form.querySelectorAll('input, textarea, button').forEach(function (el) { el.disabled = true; });
+        success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        errorBox.textContent = '전송 실패: ' + (json.error || res.status) + '\n잠시 후 다시 시도하시거나 contact@traitdunionseoul.com 으로 직접 보내주세요.';
+        errorBox.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = '예약하기';
+      }
+    } catch (err) {
+      errorBox.textContent = '네트워크 오류로 전송되지 않았습니다. contact@traitdunionseoul.com 으로 직접 보내주세요.';
+      errorBox.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = '예약하기';
+    }
+  });
+
   render();
 })();
 </script>

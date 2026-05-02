@@ -24,6 +24,13 @@ export const BOOKING_STATUS_LABEL: Record<BookingStatus, string> = {
   cancelled: '취소',
 };
 
+export type BookingMessage = {
+  id: string;
+  from: 'customer' | 'admin';
+  text: string;
+  sentAt: string;
+};
+
 export type Booking = {
   id: string;
   status: BookingStatus;
@@ -38,6 +45,12 @@ export type Booking = {
   date?: string; // YYYY-MM-DD
   duration?: string;
   message?: string;
+
+  // 손님이 자기 예약 페이지에 접근할 때 쓰는 토큰
+  customerToken?: string;
+
+  // 손님-운영자 메시지 thread
+  messages?: BookingMessage[];
 
   // 운영자가 채우는 것
   quote?: {

@@ -176,6 +176,36 @@ function fmt(d?: string) {
         </p>
       )}
 
+      <h2 style="margin-top:2.5rem;">손님 메시지 thread ({(booking.messages || []).length})</h2>
+      <p style="font-size:0.85rem; color:var(--ink-soft); margin-bottom:1rem;">손님이 보낸 메시지는 자동으로 여기 표시됩니다. 답변하시면 손님 이메일로 알림이 가고 손님 예약 페이지에서도 보입니다.</p>
+
+      <div style="margin-bottom:1.4rem;">
+        {(booking.messages || []).length === 0 && <p style="color:var(--ink-soft); font-size:0.9rem;">아직 메시지 없음</p>}
+        {(booking.messages || []).map((m) => (
+          <div style={
+            'margin-bottom:0.8rem; padding:0.9rem 1.2rem; border:1px solid var(--rule); border-left:2px solid ' +
+            (m.from === 'admin' ? 'var(--gold)' : 'var(--sage-deep)') + '; background:' +
+            (m.from === 'admin' ? 'var(--ivory)' : 'var(--paper)') + ';'
+          }>
+            <div style="font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--sage-deep); margin-bottom:0.4rem;">
+              {m.from === 'admin' ? '운영자' : booking.name + ' 님'} · {fmt(m.sentAt)}
+            </div>
+            <div style="white-space:pre-wrap; font-size:0.92rem; line-height:1.7;">{m.text}</div>
+          </div>
+        ))}
+      </div>
+
+      {booking.status !== 'cancelled' && (
+        <form id="adminMsgForm" class="form">
+          <input type="hidden" name="id" value={booking.id} />
+          <div class="form-row">
+            <label>운영자 답변</label>
+            <textarea name="text" required rows="4" placeholder="손님에게 보낼 답변. 전송 시 손님 이메일로 알림이 발송됩니다."></textarea>
+          </div>
+          <button type="submit" class="form-submit">답변 보내기</button>
+        </form>
+      )}
+
       <h2 style="margin-top:2.5rem;">운영자 메모 (내부)</h2>
       <form id="notesForm" class="form">
         <input type="hidden" name="id" value={booking.id} />
@@ -226,6 +256,7 @@ function fmt(d?: string) {
   attach('#paidForm', '/api/bookings/mark-paid');
   attach('#confirmForm', '/api/bookings/confirm');
   attach('#notesForm', '/api/bookings/notes');
+  attach('#adminMsgForm', '/api/bookings/message');
 
   var cancelBtn = document.getElementById('cancelBtn');
   if (cancelBtn) {

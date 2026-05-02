@@ -1,0 +1,148 @@
+---
+export const prerender = false;
+import Site from '../../layouts/Site.astro';
+import { findBooking, BOOKING_STATUS_LABEL } from '../../lib/bookings';
+
+const env = (Astro.locals as any).runtime?.env as ENV | undefined;
+const id = Astro.params.id || '';
+const url = new URL(Astro.request.url);
+const token = url.searchParams.get('t') || '';
+
+let booking: Awaited<ReturnType<typeof findBooking>> = null;
+let error: string | null = null;
+if (!env?.REVIEWS_KV) {
+  error = '서비스 설정이 완료되지 않았습니다.';
+} else if (!id || !token) {
+  error = '예약 페이지 링크가 올바르지 않습니다. 메일에서 받으신 정확한 링크로 접속해주세요.';
+} else {
+  try {
+    booking = await findBooking(env.REVIEWS_KV, id);
+    if (!booking) error = '예약을 찾을 수 없습니다.';
+    else if (!booking.customerToken || booking.customerToken !== token) {
+      error = '인증되지 않은 링크입니다.';
+      booking = null;
+    }
+  } catch (e: any) {
+    error = e?.message || 'KV 조회 오류';
+  }
+}
+
+function fmt(d?: string) {
+  if (!d) return '';
+  try { return new Date(d).toLocaleString('ko-KR'); } catch { return d; }
+}
+---
+<Site
+  title="내 예약 — Trait d'Union Séoul"
+  description="예약 정보 확인 및 운영자와 메시지 주고받기"
+>
+
+<main class="legal-content" style="padding-top:8rem; max-width:760px;">
+  {error && (
+    <>
+      <div class="legal-eyebrow">Réservation</div>
+      <h1>예약 페이지</h1>
+      <p class="legal-meta" style="margin-bottom:2rem;">{error}<br/>문의: <a href="mailto:contact@traitdunionseoul.com">contact@traitdunionseoul.com</a></p>
+    </>
+  )}
+
+  {booking && (
+    <>
+      <div class="legal-eyebrow">Réservation · {BOOKING_STATUS_LABEL[booking.status]}</div>
+      <h1>{booking.name} 님의 <span class="it">예약</span></h1>
+      <p class="legal-meta">예약 번호 <code>{booking.id.slice(0, 8).toUpperCase()}</code> · 접수 {fmt(booking.createdAt)}</p>
+
+      <h2>예약 정보</h2>
+      <div class="legal-info">
+        <div class="legal-info-row"><span>서비스</span><span>{booking.serviceLabel}</span></div>
+        {booking.date && <div class="legal-info-row"><span>희망 일자</span><span>{booking.date}</span></div>}
+        {booking.duration && <div class="legal-info-row"><span>소요 시간</span><span>{booking.duration}</span></div>}
+        {booking.people && <div class="legal-info-row"><span>인원</span><span>{booking.people} 명</span></div>}
+      </div>
+
+      {booking.quote && (
+        <>
+          <h2>견적 안내</h2>
+          <div class="legal-info">
+            <div class="legal-info-row"><span>금액</span><span><strong>{booking.quote.amount}</strong></span></div>
+            {booking.quote.breakdown && <div class="legal-info-row"><span>내역</span><span style="white-space:pre-wrap;">{booking.quote.breakdown}</span></div>}
+            {booking.quote.bankInfo && <div class="legal-info-row"><span>입금 안내</span><span style="white-space:pre-wrap;">{booking.quote.bankInfo}</span></div>}
+          </div>
+        </>
+      )}
+
+      {booking.confirmation && (
+        <>
+          <h2>예약확인증</h2>
+          <div class="legal-info">
+            <div class="legal-info-row"><span>미팅 장소</span><span style="white-space:pre-wrap;">{booking.confirmation.meetingPlace}</span></div>
+            <div class="legal-info-row"><span>미팅 시간</span><span>{booking.confirmation.meetingTime}</span></div>
+            {booking.confirmation.notes && <div class="legal-info-row"><span>안내</span><span style="white-space:pre-wrap;">{booking.confirmation.notes}</span></div>}
+          </div>
+        </>
+      )}
+
+      <h2>메시지 ({(booking.messages || []).length})</h2>
+      <p class="legal-meta" style="margin-bottom:1.4rem; padding:0; border:none;">시간 협의·추가 문의 사항을 운영자와 자유롭게 주고받으세요. 운영자 답변이 도착하면 입력하신 이메일로 알림을 보내드립니다.</p>
+
+      <div id="messageList" style="margin-bottom:1.4rem;">
+        {(booking.messages || []).map((m) => (
+          <div class={'msg msg-' + m.from} style={
+            'margin-bottom:0.8rem; padding:0.9rem 1.2rem; border-left:2px solid ' + (m.from === 'admin' ? 'var(--gold)' : 'var(--sage-deep)') +
+            '; background:' + (m.from === 'admin' ? 'var(--ivory)' : 'var(--paper)') +
+            '; border:1px solid var(--rule); border-left:2px solid ' + (m.from === 'admin' ? 'var(--gold)' : 'var(--sage-deep)') + ';'
+          }>
+            <div style="font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--sage-deep); margin-bottom:0.4rem;">
+              {m.from === 'admin' ? '운영자' : booking.name + ' 님'} · {fmt(m.sentAt)}
+            </div>
+            <div style="white-space:pre-wrap; font-size:0.95rem; line-height:1.7;">{m.text}</div>
+          </div>
+        ))}
+      </div>
+
+      {booking.status !== 'cancelled' && (
+        <form id="msgForm" class="form">
+          <input type="hidden" name="id" value={booking.id} />
+          <input type="hidden" name="customerToken" value={token} />
+          <div class="form-row">
+            <label>새 메시지</label>
+            <textarea name="text" required rows="4" placeholder="시간 협의, 인원 변경, 입장권 무료 대상자 여부 등 자유롭게 알려주세요."></textarea>
+          </div>
+          <button type="submit" class="form-submit">메시지 보내기</button>
+        </form>
+      )}
+    </>
+  )}
+</main>
+
+<script is:inline>
+(function () {
+  var f = document.getElementById('msgForm');
+  if (!f) return;
+  f.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var data = Object.fromEntries(new FormData(f));
+    var btn = f.querySelector('button[type="submit"]');
+    if (btn) btn.disabled = true;
+    try {
+      var res = await fetch('/api/bookings/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      var json = await res.json();
+      if (res.ok && json.ok) {
+        location.reload();
+      } else {
+        alert('전송 실패: ' + (json.error || res.status));
+        if (btn) btn.disabled = false;
+      }
+    } catch (err) {
+      alert('네트워크 오류');
+      if (btn) btn.disabled = false;
+    }
+  });
+})();
+</script>
+
+</Site>

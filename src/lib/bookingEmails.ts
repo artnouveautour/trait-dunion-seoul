@@ -94,6 +94,95 @@ export function confirmationEmail(booking: Booking): { subject: string; html: st
   return { subject, html, text };
 }
 
+export function customerAutoReplyEmail(
+  booking: Booking,
+  bookingUrl: string
+): { subject: string; html: string; text: string } {
+  const subject = `[Trait d'Union Séoul] 예약 문의가 접수되었습니다 — ${booking.serviceLabel}`;
+  const html =
+    `<div style="${BASE_STYLE}">` +
+    `<h2 style="${HEADING}">예약 문의 접수</h2>` +
+    `<p style="${SUB}">${esc(booking.name)} 님, 보내주신 문의가 접수되었습니다. 24시간 내에 시간 확정과 입금 안내를 회신드리겠습니다.</p>` +
+    `<table style="${TABLE}">` +
+    `<tr><td style="${TD_LABEL}">서비스</td><td style="${TD_VALUE}">${esc(booking.serviceLabel)}</td></tr>` +
+    (booking.date ? `<tr><td style="${TD_LABEL}">희망 일자</td><td style="${TD_VALUE}">${esc(booking.date)}</td></tr>` : '') +
+    (booking.people ? `<tr><td style="${TD_LABEL}">인원</td><td style="${TD_VALUE}">${esc(booking.people)} 명</td></tr>` : '') +
+    `</table>` +
+    `<p style="margin:1.4rem 0;"><a href="${bookingUrl}" style="display:inline-block;background:#1a2238;color:#faf7f0;padding:12px 24px;text-decoration:none;letter-spacing:0.18em;font-size:0.85rem;text-transform:uppercase;">예약 페이지 열기 →</a></p>` +
+    `<p style="font-size:0.85rem;color:#4a5a4d;">위 링크에서 추가 문의·시간 협의 메시지를 운영자와 주고받을 수 있습니다.</p>` +
+    `<p style="${FOOT}">Trait d'Union Séoul · contact@traitdunionseoul.com</p>` +
+    `</div>`;
+  const text = [
+    `예약 문의 접수`,
+    ``,
+    `${booking.name} 님, 보내주신 문의가 접수되었습니다.`,
+    `24시간 내에 시간 확정과 입금 안내를 회신드리겠습니다.`,
+    ``,
+    `서비스: ${booking.serviceLabel}`,
+    booking.date ? `희망 일자: ${booking.date}` : '',
+    booking.people ? `인원: ${booking.people} 명` : '',
+    '',
+    `예약 페이지: ${bookingUrl}`,
+    `(추가 문의·시간 협의 메시지를 위 링크에서 보낼 수 있습니다)`,
+    '',
+    `Trait d'Union Séoul`,
+  ].filter(Boolean).join('\n');
+  return { subject, html, text };
+}
+
+export function customerMessageNotifyEmail(
+  booking: Booking,
+  text: string,
+  bookingUrl: string
+): { subject: string; html: string; text: string } {
+  const subject = `[Trait d'Union Séoul] ${booking.name} 님의 새 메시지`;
+  const html =
+    `<div style="${BASE_STYLE}">` +
+    `<h2 style="${HEADING}">손님 메시지 도착</h2>` +
+    `<p style="${SUB}">${esc(booking.name)} 님 (${esc(booking.serviceLabel)}) 이 새 메시지를 보냈습니다.</p>` +
+    `<div style="background:#ebe4d6;padding:14px 16px;border-left:2px solid #b08d57;margin:1rem 0;font-size:0.95rem;line-height:1.7;white-space:pre-wrap;">${esc(text)}</div>` +
+    `<p style="margin:1.4rem 0;"><a href="${bookingUrl}" style="display:inline-block;background:#1a2238;color:#faf7f0;padding:12px 24px;text-decoration:none;letter-spacing:0.18em;font-size:0.85rem;text-transform:uppercase;">어드민에서 답변 →</a></p>` +
+    `</div>`;
+  const txt = [
+    `${booking.name} 님 (${booking.serviceLabel}) 이 새 메시지를 보냈습니다.`,
+    ``,
+    `--- 메시지 ---`,
+    text,
+    `------------`,
+    ``,
+    `어드민: ${bookingUrl}`,
+  ].join('\n');
+  return { subject, html, text: txt };
+}
+
+export function adminMessageNotifyEmail(
+  booking: Booking,
+  text: string,
+  bookingUrl: string
+): { subject: string; html: string; text: string } {
+  const subject = `[Trait d'Union Séoul] 운영자 답변 — ${booking.serviceLabel}`;
+  const html =
+    `<div style="${BASE_STYLE}">` +
+    `<h2 style="${HEADING}">운영자 답변 도착</h2>` +
+    `<p style="${SUB}">${esc(booking.name)} 님, 운영자가 새 메시지를 보냈습니다.</p>` +
+    `<div style="background:#ebe4d6;padding:14px 16px;border-left:2px solid #b08d57;margin:1rem 0;font-size:0.95rem;line-height:1.7;white-space:pre-wrap;">${esc(text)}</div>` +
+    `<p style="margin:1.4rem 0;"><a href="${bookingUrl}" style="display:inline-block;background:#1a2238;color:#faf7f0;padding:12px 24px;text-decoration:none;letter-spacing:0.18em;font-size:0.85rem;text-transform:uppercase;">예약 페이지에서 답장 →</a></p>` +
+    `<p style="${FOOT}">Trait d'Union Séoul</p>` +
+    `</div>`;
+  const txt = [
+    `${booking.name} 님, 운영자가 새 메시지를 보냈습니다.`,
+    ``,
+    `--- 메시지 ---`,
+    text,
+    `------------`,
+    ``,
+    `예약 페이지에서 답장: ${bookingUrl}`,
+    ``,
+    `Trait d'Union Séoul`,
+  ].join('\n');
+  return { subject, html, text: txt };
+}
+
 export function adminNotifyNewBooking(booking: Booking, adminUrl: string): { subject: string; html: string; text: string } {
   const subject = `[Trait d'Union Séoul] 새 견적 요청 — ${booking.name} (${booking.serviceLabel})`;
   const html =

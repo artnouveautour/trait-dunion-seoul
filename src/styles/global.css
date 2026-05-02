@@ -2058,3 +2058,259 @@ a.svc-toggle.open::after { transform: none; }
     .cal-month-label { font-size: 1.2rem; min-width: 110px; }
     .cal-legend { gap: 0.8rem 1.2rem; font-size: 0.72rem; }
 }
+/* ─────────────────────  BOOKING OPTIONS PANEL (Versailles)  ─────────────────────
+   캘린더에서 날짜를 클릭하면 펼쳐지는 인라인 예약 문의 패널. */
+.cal-day.cal-selected {
+    background: var(--ink) !important;
+    color: var(--paper) !important;
+    border-color: var(--ink) !important;
+}
+.cal-day.cal-selected:hover {
+    background: var(--ink) !important;
+    color: var(--gold) !important;
+}
+
+.booking-options {
+    margin-top: 2rem;
+    background: var(--ivory);
+    border-left: 2px solid var(--gold);
+    padding: 2rem 2rem 2.4rem;
+    display: none;
+}
+.booking-options.active { display: block; }
+
+.booking-options-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--rule);
+}
+.booking-options-head h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0;
+}
+.booking-options-head .selected-date {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    color: var(--sage-deep);
+    font-size: 1.1rem;
+}
+
+.bo-row {
+    margin-bottom: 1.4rem;
+}
+.bo-row > label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage-deep);
+    margin-bottom: 0.6rem;
+    font-weight: 400;
+}
+.bo-row input[type="text"],
+.bo-row input[type="email"],
+.bo-row input[type="tel"],
+.bo-row textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.92rem;
+    color: var(--ink);
+    transition: border-color 0.3s;
+    font-weight: 300;
+}
+.bo-row input:focus,
+.bo-row textarea:focus {
+    outline: none;
+    border-color: var(--ink);
+}
+.bo-row textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+.bo-row.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+@media (max-width: 700px) {
+    .bo-row.two-col { grid-template-columns: 1fr; }
+}
+
+/* 인원 stepper */
+.qty-stepper {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+}
+.qty-stepper button {
+    background: transparent;
+    border: none;
+    color: var(--ink);
+    width: 40px;
+    height: 40px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.qty-stepper button:hover:not(:disabled) {
+    background: var(--ivory-warm);
+    color: var(--gold);
+}
+.qty-stepper button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+.qty-stepper input {
+    width: 50px;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-family: 'EB Garamond', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+    pointer-events: none;
+}
+.qty-stepper input::-webkit-outer-spin-button,
+.qty-stepper input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.qty-hint {
+    display: inline-block;
+    margin-left: 0.8rem;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    color: var(--sage-deep);
+    font-size: 0.85rem;
+}
+
+/* 시간대 슬롯 */
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+}
+@media (max-width: 700px) {
+    .time-slots { grid-template-columns: 1fr; }
+}
+.time-slot {
+    display: block;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.25s;
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    color: var(--ink);
+}
+.time-slot input { display: none; }
+.time-slot:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+.time-slot.selected {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+}
+.time-slot small {
+    display: block;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
+    font-size: 0.7rem;
+    color: var(--sage-deep);
+    margin-top: 0.2rem;
+    letter-spacing: 0.05em;
+}
+.time-slot.selected small {
+    color: rgba(245, 240, 232, 0.7);
+}
+
+/* 합계 미리보기 */
+.bo-summary {
+    margin: 1.6rem 0;
+    padding: 1.2rem 1.4rem;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+}
+.bo-summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+}
+.bo-summary-row.total {
+    border-top: 1px solid var(--rule);
+    margin-top: 0.4rem;
+    padding-top: 0.7rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+}
+.bo-summary-row.total strong {
+    color: var(--gold);
+    font-weight: 500;
+}
+.bo-summary-note {
+    margin-top: 0.6rem;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    color: var(--sage-deep);
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+/* 제출 버튼 */
+.bo-submit {
+    width: 100%;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.2rem;
+    border: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-top: 0.6rem;
+}
+.bo-submit:hover { background: var(--sage-deep); }
+.bo-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.bo-success {
+    display: none;
+    padding: 1.5rem;
+    background: var(--sage);
+    color: var(--paper);
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+.bo-success.active { display: block; }
+
+.bo-error {
+    display: none;
+    padding: 1rem 1.4rem;
+    background: #a44;
+    color: var(--paper);
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+}

@@ -1,0 +1,183 @@
+---
+export const prerender = false;
+import Site from '../../layouts/Site.astro';
+import { isAuthenticated } from '../../lib/auth';
+import { listBlackouts } from '../../lib/blackouts';
+
+const env = (Astro.locals as any).runtime?.env as ENV | undefined;
+let authed = false;
+if (env?.AUTH_SECRET) {
+  authed = await isAuthenticated(env.AUTH_SECRET, Astro.request, env.ADMIN_EMAIL || '');
+}
+if (!authed) return Astro.redirect('/admin/login');
+
+let blackouts: Awaited<ReturnType<typeof listBlackouts>> = [];
+let kvError: string | null = null;
+if (env?.REVIEWS_KV) {
+  try { blackouts = await listBlackouts(env.REVIEWS_KV); }
+  catch (e: any) { kvError = e?.message || 'KV 조회 오류'; }
+} else {
+  kvError = 'REVIEWS_KV 바인딩 없음';
+}
+
+const initialBlackoutDates = blackouts.map((b) => b.date);
+---
+<Site
+  title="캘린더 차단 — Trait d'Union Séoul"
+  description="운영자 휴무·만석 등으로 베르사유 캘린더에서 손님이 선택할 수 없게 차단할 날짜 관리"
+>
+
+<main class="legal-content" style="padding-top:8rem; max-width:760px;">
+  <p style="margin-bottom:1.4rem;"><a href="/admin" style="color:var(--sage-deep); text-decoration:none; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase;">← 대시보드</a></p>
+  <div class="legal-eyebrow">Admin · Calendar</div>
+  <h1>캘린더 <span class="it">차단 날짜</span></h1>
+  <p class="legal-meta">날짜를 클릭하면 차단/해제됩니다. 차단된 날짜는 손님 캘린더에서 선택할 수 없게 됩니다 (베르사유 페이지). 월요일은 자동 휴궁이라 별도 설정 불필요.</p>
+
+  {kvError && <p class="legal-meta" style="background:#fee;padding:1rem;">⚠ {kvError}</p>}
+
+  <div class="booking-calendar" id="bookingCalendar" style="margin-top:1.5rem;">
+    <div class="cal-header">
+      <button type="button" class="cal-nav" aria-label="이전 달" id="calPrev">‹</button>
+      <span class="cal-month-label" id="calMonthLabel"></span>
+      <button type="button" class="cal-nav" aria-label="다음 달" id="calNext">›</button>
+    </div>
+    <div class="cal-weekdays">
+      <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-legend">
+      <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--paper);"></span>예약 가능</span>
+      <span class="cal-legend-item"><span class="cal-legend-dot dot-closed"></span>휴궁일 (월요일)</span>
+      <span class="cal-legend-item"><span class="cal-legend-dot" style="background:#a44;"></span>운영자 차단</span>
+    </div>
+  </div>
+
+  <h2>차단된 날짜 목록 ({blackouts.length})</h2>
+  {blackouts.length === 0 && <p style="color:var(--ink-soft); font-size:0.9rem;">차단된 날짜 없음</p>}
+  {blackouts.length > 0 && (
+    <div class="legal-info" id="blackoutList">
+      {blackouts.map((b) => (
+        <div class="legal-info-row">
+          <span>{b.date}</span>
+          <span>{b.reason || '—'}</span>
+        </div>
+      ))}
+    </div>
+  )}
+</main>
+
+<script is:inline define:vars={{ initialBlackoutDates }}>
+(function () {
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  var current = new Date(today.getFullYear(), today.getMonth(), 1);
+  var maxMonth = new Date(today.getFullYear(), today.getMonth() + 12, 1);
+  var blackouts = new Set(initialBlackoutDates);
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function ymd(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+
+  function render() {
+    var label = document.getElementById('calMonthLabel');
+    var grid = document.getElementById('calGrid');
+    var prevBtn = document.getElementById('calPrev');
+    var nextBtn = document.getElementById('calNext');
+    if (!label || !grid) return;
+    label.textContent = current.getFullYear() + '년 ' + (current.getMonth() + 1) + '월';
+    grid.innerHTML = '';
+
+    var firstDay = new Date(current.getFullYear(), current.getMonth(), 1);
+    var startWeekday = firstDay.getDay();
+    var daysInMonth = new Date(current.getFullYear(), current.getMonth() + 1, 0).getDate();
+
+    for (var i = 0; i < startWeekday; i++) {
+      var blank = document.createElement('span');
+      blank.className = 'cal-day cal-blank';
+      grid.appendChild(blank);
+    }
+
+    for (var day = 1; day <= daysInMonth; day++) {
+      var d = new Date(current.getFullYear(), current.getMonth(), day);
+      d.setHours(0, 0, 0, 0);
+      var weekday = d.getDay();
+      var isPast = d < today;
+      var isMonday = weekday === 1;
+      var dateStr = ymd(d);
+      var isBlackout = blackouts.has(dateStr);
+      var cell;
+      if (isPast) {
+        cell = document.createElement('span');
+        cell.className = 'cal-day cal-past';
+      } else if (isMonday) {
+        cell = document.createElement('span');
+        cell.className = 'cal-day cal-closed';
+      } else {
+        cell = document.createElement('button');
+        cell.type = 'button';
+        cell.className = 'cal-day cal-available';
+        if (isBlackout) {
+          cell.classList.add('cal-selected');
+          cell.style.background = '#a44';
+          cell.style.borderColor = '#a44';
+          cell.style.color = 'var(--paper)';
+        }
+        cell.dataset.date = dateStr;
+        cell.addEventListener('click', (function (date) {
+          return function () { toggle(date); };
+        })(dateStr));
+      }
+      cell.textContent = day;
+      grid.appendChild(cell);
+    }
+
+    if (prevBtn) {
+      var prevMonth = new Date(current.getFullYear(), current.getMonth() - 1, 1);
+      var thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      prevBtn.disabled = prevMonth < thisMonth;
+    }
+    if (nextBtn) {
+      var nextProbe = new Date(current.getFullYear(), current.getMonth() + 1, 1);
+      nextBtn.disabled = nextProbe > maxMonth;
+    }
+  }
+
+  async function toggle(date) {
+    var isCurrentlyBlackout = blackouts.has(date);
+    var action = isCurrentlyBlackout ? 'remove' : 'add';
+    var reason = '';
+    if (action === 'add') {
+      reason = prompt('차단 사유 (선택 — 예: 운영자 휴무, 만석):') || '';
+    }
+    try {
+      var res = await fetch('/api/blackouts/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action, date: date, reason: reason }),
+      });
+      var json = await res.json();
+      if (res.ok && json.ok) {
+        blackouts = new Set(json.items.map(function (i) { return i.date; }));
+        render();
+        // 페이지 새로고침으로 차단 목록도 갱신
+        setTimeout(function () { location.reload(); }, 200);
+      } else {
+        alert('실패: ' + (json.error || res.status));
+      }
+    } catch (err) {
+      alert('네트워크 오류');
+    }
+  }
+
+  document.getElementById('calPrev').addEventListener('click', function () {
+    current = new Date(current.getFullYear(), current.getMonth() - 1, 1);
+    render();
+  });
+  document.getElementById('calNext').addEventListener('click', function () {
+    current = new Date(current.getFullYear(), current.getMonth() + 1, 1);
+    render();
+  });
+  render();
+})();
+</script>
+
+</Site>

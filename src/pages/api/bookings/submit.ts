@@ -3,7 +3,7 @@ import { getKV, getEnv, badRequest, jsonResponse, serverError } from '../../../l
 import { putBooking, newId, type Booking } from '../../../lib/bookings';
 import { SERVICE_LABELS, sanitizeText } from '../../../lib/reviews';
 import { sendEmail } from '../../../lib/email';
-import { adminNotifyNewBooking } from '../../../lib/bookingEmails';
+import { adminNotifyNewBooking, customerAutoReplyEmail } from '../../../lib/bookingEmails';
 
 export const prerender = false;
 
@@ -39,6 +39,7 @@ export const POST: APIRoute = async (ctx) => {
   try { kv = getKV(ctx); } catch (e: any) { return serverError(e?.message); }
 
   const id = newId();
+  const customerToken = crypto.randomUUID();
   const now = new Date().toISOString();
   const booking: Booking = {
     id,
@@ -52,19 +53,28 @@ export const POST: APIRoute = async (ctx) => {
     date,
     duration,
     message,
+    customerToken,
+    messages: [],
     createdAt: now,
     updatedAt: now,
   };
 
   await putBooking(kv, 'new', booking);
 
-  // 운영자 알림 (실패해도 손님 응답에는 영향 없음)
+  const baseUrl = (env.SITE_URL || '').replace(/\/$/, '');
+  const adminUrl = baseUrl + '/admin/bookings/' + id;
+  const customerUrl = baseUrl + '/booking/' + id + '?t=' + encodeURIComponent(customerToken);
+
+  // 운영자 알림 + 손님 자동 회신 (실패해도 손님 응답에는 영향 없음)
   if (env.RESEND_API_KEY && env.ADMIN_EMAIL) {
     try {
-      const adminUrl = (env.SITE_URL || '').replace(/\/$/, '') + '/admin/bookings/' + id;
       const tpl = adminNotifyNewBooking(booking, adminUrl);
       await sendEmail(env, { to: env.ADMIN_EMAIL, subject: tpl.subject, html: tpl.html, text: tpl.text });
-    } catch { /* swallow — 손님에게는 OK 응답 */ }
+    } catch { /* swallow */ }
+    try {
+      const tpl = customerAutoReplyEmail(booking, customerUrl);
+      await sendEmail(env, { to: booking.email, subject: tpl.subject, html: tpl.html, text: tpl.text });
+    } catch { /* swallow */ }
   }
 
   return jsonResponse({ ok: true, id });
