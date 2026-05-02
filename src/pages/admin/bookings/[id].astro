@@ -1,0 +1,251 @@
+---
+export const prerender = false;
+import Site from '../../../layouts/Site.astro';
+import { isAuthenticated } from '../../../lib/auth';
+import { findBooking, BOOKING_STATUS_LABEL } from '../../../lib/bookings';
+
+const env = (Astro.locals as any).runtime?.env as ENV | undefined;
+let authed = false;
+if (env?.AUTH_SECRET) {
+  authed = await isAuthenticated(env.AUTH_SECRET, Astro.request, env.ADMIN_EMAIL || '');
+}
+if (!authed) return Astro.redirect('/admin/login');
+
+const id = Astro.params.id || '';
+let booking = null as Awaited<ReturnType<typeof findBooking>>;
+let kvError: string | null = null;
+if (env?.REVIEWS_KV) {
+  try { booking = await findBooking(env.REVIEWS_KV, id); }
+  catch (e: any) { kvError = e?.message || 'KV 조회 오류'; }
+} else {
+  kvError = 'REVIEWS_KV 바인딩 없음';
+}
+
+function fmt(d?: string) {
+  if (!d) return '';
+  try { return new Date(d).toLocaleString('ko-KR'); } catch { return d; }
+}
+---
+<Site title="예약 상세 — Trait d'Union Séoul" description="예약 정보 및 액션">
+
+<main class="legal-content" style="padding-top:8rem; max-width:780px;">
+  <p style="margin-bottom:1.4rem;"><a href="/admin/bookings" style="color:var(--sage-deep); text-decoration:none; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase;">← 예약 목록</a></p>
+
+  {kvError && <p class="legal-meta" style="background:#fee;padding:1rem;">⚠ {kvError}</p>}
+
+  {!booking && !kvError && <p class="legal-meta">예약을 찾을 수 없습니다.</p>}
+
+  {booking && (
+    <>
+      <div class="legal-eyebrow">Admin · Booking · {BOOKING_STATUS_LABEL[booking.status]}</div>
+      <h1>{booking.name} <span class="it">— {booking.serviceLabel}</span></h1>
+      <p class="legal-meta">접수 {fmt(booking.createdAt)} · 마지막 갱신 {fmt(booking.updatedAt)} · 예약 번호 <code>{booking.id.slice(0, 8).toUpperCase()}</code></p>
+
+      <h2>손님 정보</h2>
+      <div class="legal-info">
+        <div class="legal-info-row"><span>성함</span><span>{booking.name}</span></div>
+        <div class="legal-info-row"><span>이메일</span><span><a href={`mailto:${booking.email}`}>{booking.email}</a></span></div>
+        {booking.kakao && <div class="legal-info-row"><span>카카오톡</span><span>{booking.kakao}</span></div>}
+        <div class="legal-info-row"><span>서비스</span><span>{booking.serviceLabel}</span></div>
+        {booking.date && <div class="legal-info-row"><span>희망 일자</span><span>{booking.date}</span></div>}
+        {booking.duration && <div class="legal-info-row"><span>소요 시간</span><span>{booking.duration}</span></div>}
+        {booking.people && <div class="legal-info-row"><span>인원</span><span>{booking.people}</span></div>}
+      </div>
+
+      {booking.message && (
+        <>
+          <h2>요청 사항</h2>
+          <div class="legal-info" style="white-space:pre-wrap;">{booking.message}</div>
+        </>
+      )}
+
+      {booking.quote && (
+        <>
+          <h2>발송된 견적 ({fmt(booking.quote.sentAt)})</h2>
+          <div class="legal-info">
+            <div class="legal-info-row"><span>금액</span><span><strong>{booking.quote.amount}</strong></span></div>
+            {booking.quote.breakdown && <div class="legal-info-row"><span>내역</span><span style="white-space:pre-wrap;">{booking.quote.breakdown}</span></div>}
+            {booking.quote.bankInfo && <div class="legal-info-row"><span>입금 안내</span><span style="white-space:pre-wrap;">{booking.quote.bankInfo}</span></div>}
+          </div>
+        </>
+      )}
+
+      {booking.paid && (
+        <>
+          <h2>입금 확인 ({fmt(booking.paid.confirmedAt)})</h2>
+          <div class="legal-info">
+            {booking.paid.amount && <div class="legal-info-row"><span>금액</span><span>{booking.paid.amount}</span></div>}
+            {booking.paid.method && <div class="legal-info-row"><span>방법</span><span>{booking.paid.method}</span></div>}
+            {booking.paid.note && <div class="legal-info-row"><span>메모</span><span style="white-space:pre-wrap;">{booking.paid.note}</span></div>}
+          </div>
+        </>
+      )}
+
+      {booking.confirmation && (
+        <>
+          <h2>발송된 예약확인증 ({fmt(booking.confirmation.sentAt)})</h2>
+          <div class="legal-info">
+            <div class="legal-info-row"><span>미팅 장소</span><span style="white-space:pre-wrap;">{booking.confirmation.meetingPlace}</span></div>
+            <div class="legal-info-row"><span>미팅 시간</span><span>{booking.confirmation.meetingTime}</span></div>
+            {booking.confirmation.notes && <div class="legal-info-row"><span>안내</span><span style="white-space:pre-wrap;">{booking.confirmation.notes}</span></div>}
+          </div>
+        </>
+      )}
+
+      {booking.cancelled && (
+        <>
+          <h2>취소됨 ({fmt(booking.cancelled.cancelledAt)} · {booking.cancelled.by === 'customer' ? '손님 요청' : '운영자'})</h2>
+          {booking.cancelled.reason && <div class="legal-info" style="white-space:pre-wrap;">{booking.cancelled.reason}</div>}
+        </>
+      )}
+
+      {(booking.status === 'new' || booking.status === 'quoted') && (
+        <>
+          <h2>견적 발송{booking.status === 'quoted' ? ' (다시 발송 가능)' : ''}</h2>
+          <form id="quoteForm" class="form">
+            <input type="hidden" name="id" value={booking.id} />
+            <div class="form-row">
+              <label>금액 (자유 입력 — 예: €380, ₩540,000)</label>
+              <input type="text" name="amount" required value={booking.quote?.amount || ''} />
+            </div>
+            <div class="form-row">
+              <label>견적 내역 (선택)</label>
+              <textarea name="breakdown" rows="3" placeholder="예: 반나절 4시간 패키지 €380, 추가 시간 €0, 차량비 별도">{booking.quote?.breakdown || ''}</textarea>
+            </div>
+            <div class="form-row">
+              <label>입금 안내 (계좌 정보 등)</label>
+              <textarea name="bankInfo" rows="4" placeholder="예: 한국 KB국민은행 123-456-789 (예금주: ○○○) / 입금 후 카톡으로 알려주세요.">{booking.quote?.bankInfo || ''}</textarea>
+            </div>
+            <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+              <button type="submit" class="form-submit" data-send="1" style="flex:1;">손님에게 견적 발송 (이메일)</button>
+              <button type="submit" class="form-submit" data-send="0" style="flex:1; background:var(--sage-deep);">발송 없이 저장만</button>
+            </div>
+          </form>
+        </>
+      )}
+
+      {booking.status === 'quoted' && (
+        <>
+          <h2 style="margin-top:2.5rem;">입금 확인</h2>
+          <form id="paidForm" class="form">
+            <input type="hidden" name="id" value={booking.id} />
+            <div class="form-row two-col">
+              <div>
+                <label>입금 금액 (선택)</label>
+                <input type="text" name="amount" placeholder="견적과 같으면 비워둬도 됨" />
+              </div>
+              <div>
+                <label>입금 방법 (선택)</label>
+                <input type="text" name="method" placeholder="예: 한국 계좌 / 프랑스 계좌" />
+              </div>
+            </div>
+            <div class="form-row">
+              <label>메모 (선택)</label>
+              <input type="text" name="note" placeholder="예: 일부만 입금됨, 또는 전액 확인" />
+            </div>
+            <button type="submit" class="form-submit">입금 확인 처리</button>
+          </form>
+        </>
+      )}
+
+      {booking.status === 'paid' && (
+        <>
+          <h2>예약확인증 발송</h2>
+          <form id="confirmForm" class="form">
+            <input type="hidden" name="id" value={booking.id} />
+            <div class="form-row">
+              <label>미팅 장소 (필수)</label>
+              <textarea name="meetingPlace" required rows="2" placeholder="예: 베르사유 궁전 VIP 게이트 B 앞 (정확한 위치 첨부)">{booking.confirmation?.meetingPlace || ''}</textarea>
+            </div>
+            <div class="form-row">
+              <label>미팅 시간 (필수)</label>
+              <input type="text" name="meetingTime" required value={booking.confirmation?.meetingTime || ''} placeholder="예: 2026년 5월 15일 (목) 오전 10:00 (현지 시간)" />
+            </div>
+            <div class="form-row">
+              <label>추가 안내 (선택)</label>
+              <textarea name="notes" rows="4" placeholder="예: 준비물 (편한 신발, 여권, 입장권 예매 확인서, 3.5mm 유선 이어폰)">{booking.confirmation?.notes || ''}</textarea>
+            </div>
+            <button type="submit" class="form-submit">손님에게 예약확인증 발송</button>
+          </form>
+        </>
+      )}
+
+      {booking.status !== 'cancelled' && (
+        <p style="margin-top:2.5rem;">
+          <button type="button" id="cancelBtn" style="background:transparent; color:var(--ink); border:1px solid var(--rule-strong); padding:0.7rem 1.4rem; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; cursor:pointer;">예약 취소</button>
+        </p>
+      )}
+
+      <h2 style="margin-top:2.5rem;">운영자 메모 (내부)</h2>
+      <form id="notesForm" class="form">
+        <input type="hidden" name="id" value={booking.id} />
+        <div class="form-row">
+          <label>메모</label>
+          <textarea name="adminNotes" rows="4">{booking.adminNotes || ''}</textarea>
+        </div>
+        <button type="submit" class="form-submit" style="background:var(--sage-deep);">메모 저장</button>
+      </form>
+    </>
+  )}
+</main>
+
+<script is:inline>
+(function () {
+  function attach(selector, endpoint, getExtra) {
+    var f = document.querySelector(selector);
+    if (!f) return;
+    f.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var data = Object.fromEntries(new FormData(f));
+      if (getExtra) Object.assign(data, getExtra(e));
+      var btn = e.submitter || f.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+      try {
+        var res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        var json = await res.json();
+        if (res.ok && json.ok) {
+          location.reload();
+        } else {
+          alert('실패: ' + (json.error || res.status));
+          if (btn) btn.disabled = false;
+        }
+      } catch (err) {
+        alert('네트워크 오류');
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+
+  attach('#quoteForm', '/api/bookings/quote', function (e) {
+    return { sendNow: e.submitter && e.submitter.getAttribute('data-send') === '1' };
+  });
+  attach('#paidForm', '/api/bookings/mark-paid');
+  attach('#confirmForm', '/api/bookings/confirm');
+  attach('#notesForm', '/api/bookings/notes');
+
+  var cancelBtn = document.getElementById('cancelBtn');
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', async function () {
+      var reason = prompt('취소 사유를 입력하세요 (선택):');
+      if (reason === null) return;
+      cancelBtn.disabled = true;
+      try {
+        var res = await fetch('/api/bookings/cancel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: document.querySelector('input[name="id"]').value, reason: reason, by: 'admin' }),
+        });
+        var json = await res.json();
+        if (res.ok && json.ok) location.reload();
+        else { alert('취소 실패: ' + (json.error || res.status)); cancelBtn.disabled = false; }
+      } catch (err) { alert('네트워크 오류'); cancelBtn.disabled = false; }
+    });
+  }
+})();
+</script>
+
+</Site>

@@ -1,0 +1,21 @@
+{
+  "name": "trait-dunion-seoul",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^11.0.0",
+    "astro": "^4.16.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260501.1",
+    "typescript": "^5.6.0"
+  }
+}

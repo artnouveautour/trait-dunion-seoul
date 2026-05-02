@@ -1,0 +1,105 @@
+---
+export const prerender = false;
+import Site from '../layouts/Site.astro';
+import { listReviews, type Review } from '../lib/reviews';
+
+const env = (Astro.locals as any).runtime?.env as ENV | undefined;
+let approved: Review[] = [];
+if (env?.REVIEWS_KV) {
+  try {
+    approved = await listReviews(env.REVIEWS_KV, 'approved');
+  } catch {
+    approved = [];
+  }
+}
+
+const fallback = [
+  { id: 'f1', name: '김OO 님', rating: 5, serviceLabel: '비즈니스 통역', tourDate: '2025', text: '파리 시청에서 체류증 갱신할 때 통역으로 동행해주셨는데, 25년 경력이 무엇인지 알겠더라고요. 행정 용어 하나하나를 정확히 풀어주셔서 마음이 놓였습니다. 다음에도 꼭 부탁드릴 예정입니다.' },
+  { id: 'f2', name: '이OO 님', rating: 5, serviceLabel: '비즈니스 통역', tourDate: '2025', text: '파리 박람회 바이어 미팅에 통역으로 모셨는데, 우리도 미처 잡지 못한 뉘앙스까지 정확히 짚어주셨습니다. 사전 자료를 꼼꼼히 검토해 오신 게 그대로 드러나는 통역이었어요.' },
+  { id: 'f3', name: '박OO 님', rating: 5, serviceLabel: '베르사유 궁전 VIP 투어', tourDate: '2025', text: 'VIP 게이트로 들어가는 순간부터 달랐습니다. 일반 줄에서 1시간 기다리는 사람들 옆을 지나가는데 비현실적이더라고요. 거울의 방에서 들은 마리 앙투아네트 이야기는 두고두고 기억에 남을 거예요.' },
+];
+
+const display = approved.length > 0 ? approved : fallback;
+
+function star(n: number) {
+  return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+
+function dateLabel(r: { tourDate?: string; approvedAt?: string }) {
+  if (r.tourDate && /^\d{4}/.test(r.tourDate)) return r.tourDate.slice(0, 4);
+  if (r.approvedAt) return new Date(r.approvedAt).getFullYear().toString();
+  return '';
+}
+---
+<Site
+  title="소개 — Trait d'Union Séoul"
+  description="파리에 거주한 한국인, 두 언어가 모국어인 사람. 25년간 함께한 기업·기관과 손님들의 목소리."
+>
+
+<!-- ABOUT -->
+<section class="about" id="about" style="padding-top:11rem;">
+    <div class="reveal">
+        <div class="section-eyebrow">À propos</div>
+        <h2>파리에 거주한 한국인,<br>두 언어가 <span class="it">모국어</span>인 사람.</h2>
+    </div>
+    <div class="about-body reveal">
+        <p>저희는 한국어-프랑스어 통역과 미술관·문화 기행을 함께 운영하는 작은 공동체입니다. 25년 경력의 책임자를 중심으로, 분야별 동료 통역사들과 분야별 전공·자격을 가진 동료 공인 해설사들이 협력합니다.</p>
+        <p>책임자는 한국에서 불문학을 전공하고 인문학 연구자로 번역서를 펴낸 뒤, 15년간 파리 미술관에서 한국어 해설사로 일하며 프랑스 문화부 관할 국가고시 해설사 자격을 취득했습니다. 통역사로서는 파리 시청·보건부·일드프랑스 보건청·파리 법원 등 주요 관공서와, LVMH·Air France·Veolia·Decathlon·Kia France 등 글로벌 기업의 협상·회의를 동행해왔습니다. 루브르·오랑주리의 한국어 오디오 가이드를 직접 제작하고, 업계 최초로 익스프레스 투어를 런칭한 것도 이 시기의 일입니다.</p>
+        <p><em>Trait d'Union Séoul</em>은 두 영역이 협력으로 운영되는 곳입니다. 비즈니스 통역은 책임자와 분야별 동료 통역사들이 함께, 문화 기행은 분야별 전공·자격을 가진 동료 공인 해설사들과 함께 — 손님의 일정·관심사·분야에 따라 가장 잘 맞는 분과 매칭해드립니다.</p>
+
+        <div class="signature">
+            Trait d'Union Séoul.
+            <div class="signature-sub">파리와 서울을 잇다</div>
+        </div>
+    </div>
+</section>
+
+<!-- REFERENCES -->
+<section class="references">
+    <div class="refs-inner reveal">
+        <div class="refs-title">함께한 기업과 기관</div>
+        <div class="refs-subtitle">References · 25 ans</div>
+
+        <div class="refs-grid">
+            <div class="ref-cell">LVMH</div>
+            <div class="ref-cell">Air France</div>
+            <div class="ref-cell">Veolia</div>
+            <div class="ref-cell">Kia France</div>
+            <div class="ref-cell">Valeo</div>
+            <div class="ref-cell">Lactalis</div>
+            <div class="ref-cell">Decathlon</div>
+            <div class="ref-cell">Groupe Accor</div>
+            <div class="ref-cell">Mairie de Paris</div>
+            <div class="ref-cell">Ministère de la Santé</div>
+            <div class="ref-cell">CPAM Île-de-France</div>
+            <div class="ref-cell">Palais de Justice</div>
+        </div>
+
+        <p class="refs-foot">— et bien d'autres encore.</p>
+    </div>
+</section>
+
+<!-- TESTIMONIALS (KV에서 fetch한 승인된 후기, 없으면 fallback) -->
+<section class="testimonials">
+    <div class="testimonials-inner">
+        <div class="testimonials-head reveal">
+            <div class="section-eyebrow" style="justify-content:center; display:inline-flex">Témoignages</div>
+            <h2>함께한 분들의 <span class="it">목소리</span></h2>
+        </div>
+
+        <div class="testimonials-grid">
+            {display.map((r) => (
+                <div class="testimonial reveal">
+                    <div class="testimonial-stars">{star(r.rating)}</div>
+                    <p class="testimonial-text">{r.text}</p>
+                    <div class="testimonial-author">
+                        <strong>{r.name}</strong>
+                        <span>{r.serviceLabel} · {dateLabel(r)}</span>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+</section>
+
+</Site>

@@ -1,0 +1,172 @@
+---
+import Site from '../layouts/Site.astro';
+---
+<Site
+  title="자주 묻는 질문 — Trait d'Union Séoul"
+  description="예약·결제·환불·차량·VIP 가이딩·지방 출장·베르사유 등 자주 묻는 질문에 대한 답변."
+>
+
+<!-- FAQ -->
+<section class="faq" style="padding-top:11rem;">
+    <div class="faq-head reveal">
+        <div class="section-eyebrow" style="justify-content:center; display:inline-flex">Questions fréquentes</div>
+        <h2>자주 묻는 <span class="it">질문</span></h2>
+    </div>
+
+    <div class="faq-list">
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">예약은 어떻게 진행되나요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>아래 견적 요청 폼 또는 이메일·카카오톡으로 일정·인원·서비스 종류를 보내주시면, 24시간 내에 맞춤 견적과 일정안을 회신드립니다.</p>
+                    <p>견적에 동의하시면 안내드린 계좌로 입금하시면 예약이 확정됩니다. 예약 확정 후에는 사전 자료(미팅 자료·박물관 입장권 안내·미팅 장소 등)를 공유드립니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">VIP 맞춤 가이딩의 해설사는 어떤 분이신가요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>VIP 맞춤 가이딩은 분야별 전공·자격을 가진 공인 해설사들이 협력하는 한국어 가이드 공동체와 함께 운영합니다. 모든 해설사가 <em>프랑스 문화부 관할 국가고시 해설사 자격</em>을 보유하며, 와인 기행은 소믈리에 자격증을 가진 해설사, 문학 기행은 불문학 전공 해설사, 남불 투어는 프로방스 전문 해설사 등 테마별 전공이 다릅니다.</p>
+                    <p>책임자(25년 경력 통역사·15년 미술관 해설사)가 손님의 일정·관심사를 듣고 가장 잘 맞는 해설사를 매칭한 뒤, 동선과 사전 자료를 직접 조율합니다. 한 사람이 모든 테마를 다룬다고 주장하지 않고, 분야별 깊이를 그대로 받아보실 수 있도록 설계되어 있습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">통역 서비스는 어떤 분야가 가능한가요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>25년간 다양한 분야의 통역을 수행해왔습니다. 비즈니스 협상, 국제 무역, 패션쇼, 자동차 부품, 식품·농업, 물류·운송, 의료, 법률·행정, 기술 등 거의 모든 분야가 가능합니다.</p>
+                    <p>관공서 동행(시청, 보건청, 세무서, 체류증), 법원 동행(소송, 공증), 병원 통역(진료, 검사 결과), 부동산 계약, 학교 입학 상담 등 일상 행정 업무도 25년 경력의 신뢰로 동행해드립니다.</p>
+                    <p>전문 분야가 까다로운 경우 사전 자료를 공유해주시면 용어 검토 후 정확한 통역을 보장합니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">파리 외 지방 출장도 가능한가요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>가능합니다. 리옹, 마르세유, 보르도, 스트라스부르, 노르망디 지역 등 프랑스 전역으로 출장 가능합니다.</p>
+                    <p>지방 출장의 경우 견적이 별도로 산정됩니다 — 통역료 외에 이동비(기차·항공), 숙박비(필요 시), 식사비가 포함됩니다. 일정과 목적지를 알려주시면 상세 견적을 보내드립니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">차량이 필요하면 어떻게 하나요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>저희는 통역과 문화 동행에 집중하기 위해 운송은 직접 운영하지 않습니다. 다만 신뢰할 수 있는 파트너 운송 회사와 연결해드릴 수 있습니다.</p>
+                    <p>차량 종류(일반 세단·SUV·VIP V클래스 등), 인원, 일정에 맞춰 적절한 업체를 추천드리며, 차량 계약은 고객께서 운송 회사와 직접 진행하시게 됩니다. 이렇게 하면 차량 사고나 분쟁 시 책임 소재가 명확하고, 고객께도 더 합리적인 가격이 됩니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">결제는 어떻게 하나요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>견적 확정 후 다음 방법 중 편하신 것으로 결제하실 수 있습니다:</p>
+                    <p>· 한국 계좌 이체 (원화)<br>
+                    · 프랑스 계좌 이체 (유로)</p>
+                    <p>세금계산서·견적서 발행 가능합니다. 한국 기업 출장 통역의 경우 한국 본사로 직접 청구도 가능하니 문의해주세요.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">취소·환불 규정은 어떻게 되나요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>서비스별로 환불 규정이 다소 다릅니다:</p>
+                    <p><strong>비즈니스 통역</strong> — 이용일 3일 전까지 통보 시 전액 환불 / 2일 전~당일 환불 불가</p>
+                    <p><strong>VIP 가이딩 · 베르사유 궁전 VIP 투어</strong> — 이용일 7일 전까지 전액 환불 / 6–3일 전 50% 공제 / 2일 전~당일 환불 불가</p>
+                    <p>천재지변, 항공편 결항, 베르사유 임시휴관 등 부득이한 사유의 경우 일정 변경 또는 전액 환불해드립니다. 증빙 서류(항공권 결항 안내문 등) 공유 부탁드립니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">대중교통으로 베르사유까지 어떻게 가나요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>예약 확정 후 RER C, L, N, U 노선의 표 구입부터 환승, 베르사유역에서 궁전까지의 도보 동선까지 자세하게 안내해드립니다.</p>
+                    <p>파리–베르사유 구간은 상습 정체 구역이라 차량보다 기차가 더 빠르고 편합니다. 3인 이상이라면 우버도 합리적인 선택이 될 수 있고, 별도 차량이 필요하신 경우 운송 회사와 연결해드립니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">VIP 게이트 B는 정확히 무엇인가요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>베르사유 궁전에는 일반 관람객용 게이트 A와, 프랑스 국가 공인 가이드 동반 그룹만 통과할 수 있는 게이트 B가 있습니다. 게이트 A는 매일 수천 명이 몰려 보안 검색 줄에서만 1시간 이상이 걸리는 경우가 많습니다.</p>
+                    <p>저희 투어는 국가 공인 가이드 자격으로 게이트 B를 이용해 신속하게 입장합니다. 가장 체력이 좋은 시간을, 줄 서는 데 쓰지 않고 궁전 관람에 온전히 사용하실 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">설명 금지 구역에서는 어떻게 하나요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>베르사유 궁전 내부에는 정숙을 위해 가이드의 육성 설명이 법적으로 금지된 방(풍요의 방, 왕비의 방 등)이 있습니다. 일반 가이드 투어는 이 구간에서 침묵하거나 기계음만 들려주고 지나갑니다.</p>
+                    <p>저희는 이 구간을 위해 가이드가 직접 녹음한 고음질 육성 스토리텔링을 무선 수신기로 송출해드립니다. 가이드의 손짓과 귓가에 들리는 설명이 정확히 싱크로되는 순간, 영화 같은 몰입감을 경험하실 수 있습니다.</p>
+                    <p>준비물은 간단합니다 — <em>3.5mm 유선 이어폰</em> 한 개만 챙겨오시면 됩니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFAQ(this)">
+            <div class="faq-question">
+                <div class="faq-q-text">베르사유 입장권은 어떻게 예매하나요?</div>
+                <div class="faq-toggle-icon">+</div>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    <p>베르사유 궁전 입장권(€21–€32)은 별도로 예매하셔야 합니다. 예약 확정 후 정확한 예매 링크와 시간대를 안내드립니다 — 투어 시간과 맞는 시간대를 선택하시는 게 중요합니다.</p>
+                    <p>다음 분들은 무료 입장 가능합니다:</p>
+                    <p>· 18세 미만 (여권 제시)<br>
+                    · 26세 미만 EU 거주자 (EU 거주비자 제시)<br>
+                    · 뮤지엄패스 보유자<br>
+                    · 미술사·건축·미술·디자인 전공 학생 (영문 학생증 또는 영문 재학증명서 제시)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</Site>

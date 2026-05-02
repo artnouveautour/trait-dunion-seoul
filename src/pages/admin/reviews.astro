@@ -1,0 +1,108 @@
+---
+export const prerender = false;
+import Site from '../../layouts/Site.astro';
+import { isAuthenticated } from '../../lib/auth';
+import { listReviews } from '../../lib/reviews';
+
+const env = (Astro.locals as any).runtime?.env as ENV | undefined;
+let authed = false;
+if (env?.AUTH_SECRET) {
+  authed = await isAuthenticated(env.AUTH_SECRET, Astro.request, env.ADMIN_EMAIL || '');
+}
+if (!authed) {
+  return Astro.redirect('/admin/login');
+}
+
+let pending: Awaited<ReturnType<typeof listReviews>> = [];
+let approved: Awaited<ReturnType<typeof listReviews>> = [];
+let kvError: string | null = null;
+if (env?.REVIEWS_KV) {
+  try {
+    pending = await listReviews(env.REVIEWS_KV, 'pending');
+    approved = await listReviews(env.REVIEWS_KV, 'approved');
+  } catch (e: any) {
+    kvError = e?.message || 'KV 조회 오류';
+  }
+} else {
+  kvError = 'REVIEWS_KV 바인딩 없음';
+}
+
+function star(n: number) {
+  return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+---
+<Site
+  title="후기 승인 — Trait d'Union Séoul"
+  description="제출된 후기 검토 및 승인/거부"
+>
+
+<main class="legal-content" style="padding-top:8rem; max-width:920px;">
+  <p style="margin-bottom:1.4rem;"><a href="/admin" style="color:var(--sage-deep); text-decoration:none; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase;">← 대시보드</a></p>
+  <div class="legal-eyebrow">Admin · Reviews</div>
+  <h1>후기 <span class="it">승인</span></h1>
+
+  {kvError && <p class="legal-meta" style="background:#fee;padding:1rem;">⚠ {kvError}</p>}
+
+  <h2 style="margin-top:2rem;">대기 중 ({pending.length})</h2>
+  {pending.length === 0 && <p style="color:var(--ink-soft);">대기 중인 후기가 없습니다.</p>}
+  {pending.map((r) => (
+    <div class="legal-info" data-id={r.id} style="border-left-color:var(--gold);">
+      <div style="display:flex; justify-content:space-between; gap:1rem; margin-bottom:0.6rem; flex-wrap:wrap;">
+        <strong>{r.name}</strong>
+        <span style="color:var(--gold); letter-spacing:0.1em;">{star(r.rating)}</span>
+      </div>
+      <p style="font-family:'EB Garamond', serif; font-style:italic; font-size:0.85rem; color:var(--sage-deep); margin-bottom:0.6rem;">{r.serviceLabel} · {r.tourDate} · 제출 {new Date(r.submittedAt).toLocaleDateString('ko-KR')}</p>
+      <p style="margin-bottom:1rem; white-space:pre-wrap;">{r.text}</p>
+      <div style="display:flex; gap:0.6rem;">
+        <button type="button" class="approve-btn" data-action="approve" data-id={r.id} style="background:var(--sage-deep); color:var(--paper); border:none; padding:0.6rem 1.2rem; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; cursor:pointer;">승인</button>
+        <button type="button" class="reject-btn" data-action="reject" data-id={r.id} style="background:transparent; color:var(--ink); border:1px solid var(--rule-strong); padding:0.6rem 1.2rem; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; cursor:pointer;">거부</button>
+      </div>
+    </div>
+  ))}
+
+  <h2 style="margin-top:3rem;">승인됨 ({approved.length})</h2>
+  {approved.length === 0 && <p style="color:var(--ink-soft);">승인된 후기가 없습니다.</p>}
+  {approved.map((r) => (
+    <div class="legal-info" style="border-left-color:var(--sage-deep);">
+      <div style="display:flex; justify-content:space-between; gap:1rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+        <strong>{r.name}</strong>
+        <span style="color:var(--gold); letter-spacing:0.1em;">{star(r.rating)}</span>
+      </div>
+      <p style="font-family:'EB Garamond', serif; font-style:italic; font-size:0.85rem; color:var(--sage-deep); margin-bottom:0.6rem;">{r.serviceLabel} · {r.tourDate} · 승인 {r.approvedAt ? new Date(r.approvedAt).toLocaleDateString('ko-KR') : ''}</p>
+      <p style="white-space:pre-wrap; font-size:0.92rem;">{r.text}</p>
+    </div>
+  ))}
+</main>
+
+<script is:inline>
+(function(){
+  document.querySelectorAll('.approve-btn, .reject-btn').forEach(function(btn){
+    btn.addEventListener('click', async function(){
+      var id = btn.getAttribute('data-id');
+      var action = btn.getAttribute('data-action');
+      var label = action === 'approve' ? '승인' : '거부';
+      if (!confirm('이 후기를 ' + label + '하시겠습니까?')) return;
+      btn.disabled = true;
+      try {
+        var res = await fetch('/api/reviews/approve', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({id: id, action: action})
+        });
+        var json = await res.json();
+        if (res.ok && json.ok) {
+          location.reload();
+        } else {
+          alert(label + ' 실패: ' + (json.error || res.status));
+          btn.disabled = false;
+        }
+      } catch (err) {
+        alert('네트워크 오류');
+        btn.disabled = false;
+      }
+    });
+  });
+})();
+</script>
+
+</Site>

@@ -1,0 +1,67 @@
+---
+export const prerender = false;
+import Site from '../../../layouts/Site.astro';
+import { isAuthenticated } from '../../../lib/auth';
+import { listAllBookings, BOOKING_STATUS_ORDER, BOOKING_STATUS_LABEL, type Booking } from '../../../lib/bookings';
+
+const env = (Astro.locals as any).runtime?.env as ENV | undefined;
+let authed = false;
+if (env?.AUTH_SECRET) {
+  authed = await isAuthenticated(env.AUTH_SECRET, Astro.request, env.ADMIN_EMAIL || '');
+}
+if (!authed) return Astro.redirect('/admin/login');
+
+let bookings = {} as Record<string, Booking[]>;
+let kvError: string | null = null;
+if (env?.REVIEWS_KV) {
+  try {
+    bookings = await listAllBookings(env.REVIEWS_KV);
+  } catch (e: any) { kvError = e?.message || 'KV 조회 오류'; }
+} else {
+  kvError = 'REVIEWS_KV 바인딩 없음';
+}
+
+function fmt(d?: string) {
+  if (!d) return '';
+  try { return new Date(d).toLocaleDateString('ko-KR'); } catch { return d; }
+}
+---
+<Site title="예약 관리 — Trait d'Union Séoul" description="예약 워크플로우 어드민">
+
+<main class="legal-content" style="padding-top:8rem; max-width:980px;">
+  <p style="margin-bottom:1.4rem;"><a href="/admin" style="color:var(--sage-deep); text-decoration:none; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase;">← 대시보드</a></p>
+  <div class="legal-eyebrow">Admin · Bookings</div>
+  <h1>예약 <span class="it">관리</span></h1>
+
+  {kvError && <p class="legal-meta" style="background:#fee;padding:1rem;">⚠ {kvError}</p>}
+
+  {BOOKING_STATUS_ORDER.map((s) => (
+    <section style="margin-top:2.4rem;">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:1.4rem;margin-bottom:1rem;">
+        {BOOKING_STATUS_LABEL[s]} <span style="color:var(--sage-deep); font-size:1rem; font-style:italic;">({(bookings[s] || []).length})</span>
+      </h2>
+      {(bookings[s] || []).length === 0 ? (
+        <p style="color:var(--ink-soft); font-size:0.9rem;">없음</p>
+      ) : (
+        <div style="display:grid; gap:0.6rem;">
+          {(bookings[s] || []).map((b) => (
+            <a href={`/admin/bookings/${b.id}`} style="display:block; padding:1rem 1.2rem; border:1px solid var(--rule); background:var(--paper); text-decoration:none; color:var(--ink); transition:border-color 0.2s;">
+              <div style="display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+                <div>
+                  <strong>{b.name}</strong>
+                  <span style="font-family:'EB Garamond',serif; font-style:italic; color:var(--sage-deep); margin-left:0.6rem; font-size:0.9rem;">
+                    {b.serviceLabel}{b.date ? ' · ' + b.date : ''}
+                  </span>
+                </div>
+                <div style="font-size:0.78rem; color:var(--sage-deep);">접수 {fmt(b.createdAt)}</div>
+              </div>
+              {b.message && <p style="margin-top:0.4rem; font-size:0.85rem; color:var(--ink-soft); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{b.message}</p>}
+            </a>
+          ))}
+        </div>
+      )}
+    </section>
+  ))}
+</main>
+
+</Site>

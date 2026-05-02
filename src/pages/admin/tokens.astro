@@ -1,0 +1,101 @@
+---
+export const prerender = false;
+import Site from '../../layouts/Site.astro';
+import { isAuthenticated } from '../../lib/auth';
+import { SERVICE_LABELS } from '../../lib/reviews';
+
+const env = (Astro.locals as any).runtime?.env as ENV | undefined;
+let authed = false;
+if (env?.AUTH_SECRET) {
+  authed = await isAuthenticated(env.AUTH_SECRET, Astro.request, env.ADMIN_EMAIL || '');
+}
+if (!authed) {
+  return Astro.redirect('/admin/login');
+}
+const services = Object.entries(SERVICE_LABELS);
+---
+<Site
+  title="후기 토큰 발급 — Trait d'Union Séoul"
+  description="투어 후 손님에게 보낼 후기 작성 링크 생성"
+>
+
+<main class="legal-content" style="padding-top:8rem; max-width:680px;">
+  <p style="margin-bottom:1.4rem;"><a href="/admin" style="color:var(--sage-deep); text-decoration:none; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase;">← 대시보드</a></p>
+  <div class="legal-eyebrow">Admin · Tokens</div>
+  <h1>후기 토큰 <span class="it">발급</span></h1>
+  <p class="legal-meta">투어를 마친 손님에게 보낼 일회용 후기 작성 링크를 생성합니다. 손님 정보를 입력하고 링크를 복사해 카톡·이메일로 발송하세요.</p>
+
+  <form id="tokenForm" class="form">
+    <div class="form-row">
+      <label>서비스 종류</label>
+      <select name="service" required>
+        <option value="">선택해주세요</option>
+        {services.map(([v, l]) => <option value={v}>{l}</option>)}
+      </select>
+    </div>
+    <div class="form-row two-col">
+      <div>
+        <label>손님 성함</label>
+        <input type="text" name="customerName" required maxlength="60" />
+      </div>
+      <div>
+        <label>투어 날짜</label>
+        <input type="date" name="tourDate" required />
+      </div>
+    </div>
+    <button type="submit" class="form-submit">토큰 발급</button>
+  </form>
+
+  <div id="tokenResult" style="display:none; margin-top:2rem; background:var(--ivory); padding:1.5rem 1.6rem; border-left:2px solid var(--gold);">
+    <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.2rem; margin-bottom:0.8rem;">발급된 후기 작성 링크</h3>
+    <p style="font-family:monospace; word-break:break-all; background:var(--paper); padding:0.8rem; border:1px solid var(--rule); margin-bottom:0.8rem;" id="tokenLink"></p>
+    <button type="button" id="copyBtn" class="cta-mini" style="background:var(--ink); color:var(--paper); padding:0.7rem 1.4rem; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; border:none; cursor:pointer;">링크 복사</button>
+    <p style="margin-top:1rem; font-size:0.85rem; color:var(--ink-soft);" id="tokenMeta"></p>
+  </div>
+</main>
+
+<script is:inline>
+(function(){
+  var form = document.getElementById('tokenForm');
+  var result = document.getElementById('tokenResult');
+  var linkEl = document.getElementById('tokenLink');
+  var metaEl = document.getElementById('tokenMeta');
+  var copyBtn = document.getElementById('copyBtn');
+  if (!form) return;
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var data = Object.fromEntries(new FormData(form));
+    try {
+      var res = await fetch('/api/reviews/issue-token', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(data)
+      });
+      var json = await res.json();
+      if (res.ok && json.ok) {
+        linkEl.textContent = json.link;
+        metaEl.textContent = json.tour.serviceLabel + ' · ' + json.tour.customerName + ' · ' + json.tour.tourDate;
+        result.style.display = 'block';
+        result.scrollIntoView({behavior:'smooth', block:'nearest'});
+      } else {
+        alert('발급 실패: ' + (json.error || res.status));
+      }
+    } catch (err) {
+      alert('네트워크 오류');
+    }
+  });
+
+  copyBtn.addEventListener('click', async function(){
+    try {
+      await navigator.clipboard.writeText(linkEl.textContent);
+      copyBtn.textContent = '복사됨 ✓';
+      setTimeout(function(){ copyBtn.textContent = '링크 복사'; }, 2000);
+    } catch (err) {
+      alert('복사 실패. 직접 선택해 복사해주세요.');
+    }
+  });
+})();
+</script>
+
+</Site>

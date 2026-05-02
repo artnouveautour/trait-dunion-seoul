@@ -1,0 +1,137 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{title}</title>
+<meta name="description" content={description} />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Sans+KR:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<Header />
+
+<slot />
+
+<Footer />
+
+<script is:inline>
+  // scroll topbar
+  (function () {
+    var topbar = document.getElementById('topbar');
+    if (!topbar) return;
+    function onScroll() {
+      if (window.scrollY > 50) topbar.classList.add('scrolled');
+      else topbar.classList.remove('scrolled');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // service detail toggle (홈의 서비스 카드용 — 상세 페이지에서는 .svc-toggle이 숨겨져 있어 호출되지 않음)
+  window.toggleDetail = function (btn) {
+    var detail = btn.nextElementSibling;
+    var isOpen = btn.classList.contains('open');
+    if (isOpen) {
+      btn.classList.remove('open');
+      detail.classList.remove('open');
+      btn.firstChild.textContent = '상세 정보 보기';
+    } else {
+      btn.classList.add('open');
+      detail.classList.add('open');
+      btn.firstChild.textContent = '상세 정보 닫기';
+    }
+  };
+
+  // FAQ toggle
+  window.toggleFAQ = function (item) {
+    item.classList.toggle('open');
+  };
+
+  // reveal on scroll
+  (function () {
+    var reveals = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window) || reveals.length === 0) {
+      reveals.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
+    reveals.forEach(function (el) { obs.observe(el); });
+  })();
+
+  // quote form (mailto fallback) — /contact 페이지에서만 활성
+  (function () {
+    var form = document.getElementById('quoteForm');
+    var success = document.getElementById('formSuccess');
+    if (!form) return;
+
+    // URL prefill — 베르사유 캘린더 등에서 ?service=...&date=... 로 넘어옴
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var service = params.get('service');
+      var date = params.get('date');
+      if (service) {
+        var sel = form.querySelector('select[name="service"]');
+        if (sel) {
+          for (var i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value === service) { sel.value = service; break; }
+          }
+        }
+      }
+      if (date) {
+        var di = form.querySelector('input[name="date"]');
+        if (di) di.value = date;
+      }
+    } catch (e) { /* noop */ }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var data = Object.fromEntries(new FormData(form));
+      var btn = form.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+      try {
+        var res = await fetch('/api/bookings/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        var json = await res.json();
+        if (res.ok && json.ok) {
+          if (success) success.classList.add('active');
+          form.reset();
+        } else {
+          alert('견적 요청 전송 실패: ' + (json.error || res.status) + '\n잠시 후 다시 시도하시거나 contact@traitdunionseoul.com 으로 직접 보내주세요.');
+          if (btn) btn.disabled = false;
+        }
+      } catch (err) {
+        alert('네트워크 오류로 전송되지 않았습니다.\ncontact@traitdunionseoul.com 으로 직접 보내주세요.');
+        if (btn) btn.disabled = false;
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>

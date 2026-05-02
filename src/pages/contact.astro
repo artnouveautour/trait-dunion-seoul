@@ -1,0 +1,172 @@
+---
+import Site from '../layouts/Site.astro';
+---
+<Site
+  title="견적 요청 — Trait d'Union Séoul"
+  description="일정·인원·서비스를 알려주시면 24시간 내로 맞춤 견적을 보내드립니다. B2B 파트너십과 4단계 예약 절차 안내."
+>
+
+<!-- B2B -->
+<section class="b2b" style="margin-top:5rem;">
+    <div class="b2b-inner">
+        <div class="b2b-art reveal"></div>
+        <div class="b2b-text reveal">
+            <div class="section-eyebrow">— Pour les entreprises</div>
+            <h2>기업·여행사 <span class="it">파트너십</span></h2>
+            <p>한국 본사·여행사·호텔 컨시어지 업계와 장기 파트너십을 환영합니다. 25년 경력의 신뢰와 분야별 공인 해설사 공동체의 전문성으로 VIP 손님 접대, 임원 동행, 기업 출장, 인센티브 투어까지 격조 있는 한국어 동행 서비스를 제공해드립니다.</p>
+            <ul class="b2b-list">
+                <li>한국 기업 파리 출장 정기 통역 계약 (월·분기 단위)</li>
+                <li>여행사 단독 상품 공급 (B2B 도매가)</li>
+                <li>호텔 컨시어지 VIP 손님 동행 의뢰</li>
+                <li>인센티브 그룹 투어 (10–20인 규모)</li>
+                <li>기업 임원·VIP 손님 단독 프라이빗 동행</li>
+                <li>한·불 외교·문화 행사 통역 (140주년 행사 경험)</li>
+            </ul>
+            <p>파트너십 문의는 별도 견적으로 진행되며, 장기 계약·복수 건의 경우 합리적인 도매가가 적용됩니다.</p>
+            <a href="#contact-form" class="b2b-cta">파트너십 문의</a>
+        </div>
+    </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+    <div class="process-head reveal">
+        <div class="section-eyebrow" style="justify-content:center; display:inline-flex">Processus</div>
+        <h2>예약은 <span class="it">간단하게.</span></h2>
+    </div>
+
+    <div class="process-grid">
+        <div class="process-step reveal">
+            <div class="step-num">i</div>
+            <div class="step-title">견적 요청</div>
+            <p class="step-desc">아래 폼 또는 카카오톡으로 일정·인원·서비스 종류를 알려주세요.</p>
+        </div>
+        <div class="process-step reveal">
+            <div class="step-num">ii</div>
+            <div class="step-title">맞춤 견적 회신</div>
+            <p class="step-desc">24시간 내 이메일 또는 카카오톡으로 상세 견적과 일정안을 보내드립니다.</p>
+        </div>
+        <div class="process-step reveal">
+            <div class="step-num">iii</div>
+            <div class="step-title">예약 확정</div>
+            <p class="step-desc">안내드린 계좌로 입금하시면 예약이 확정됩니다. 영수증 발행 가능.</p>
+        </div>
+        <div class="process-step reveal">
+            <div class="step-num">iv</div>
+            <div class="step-title">파리에서 만남</div>
+            <p class="step-desc">사전 자료를 공유드리고, 약속된 장소에서 만나 시작합니다.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact-form">
+    <div class="contact-inner">
+        <div class="contact-left reveal">
+            <div class="section-eyebrow">Contact</div>
+            <h2>견적 요청 ─<br><span class="it">함께 시작합시다.</span></h2>
+            <p>일정, 인원, 필요한 서비스를 알려주시면 24시간 내로 맞춤 견적을 보내드립니다. 한국어로 자유롭게 작성해주세요.</p>
+
+            <div class="contact-info">
+                <div class="contact-info-row">
+                    <span>Email</span>
+                    <span><a href="mailto:contact@traitdunionseoul.com">contact@traitdunionseoul.com</a></span>
+                </div>
+                <div class="contact-info-row">
+                    <span>KakaoTalk</span>
+                    <span>ID 추후 안내</span>
+                </div>
+                <div class="contact-info-row">
+                    <span>WhatsApp</span>
+                    <span>+33 (0) — 추후 안내</span>
+                </div>
+                <div class="contact-info-row">
+                    <span>응답 시간</span>
+                    <span>평일 24시간 이내 (파리 시간 기준)</span>
+                </div>
+            </div>
+
+            <div class="channel-buttons">
+                <a href="#" class="channel-btn" target="_blank" rel="noopener">
+                    <span class="icon">💬</span> KakaoTalk 채널
+                </a>
+                <a href="#" class="channel-btn" target="_blank" rel="noopener">
+                    <span class="icon">📷</span> Instagram
+                </a>
+                <a href="#" class="channel-btn" target="_blank" rel="noopener">
+                    <span class="icon">📞</span> WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <form class="form reveal" id="quoteForm">
+            <div class="form-row two-col">
+                <div>
+                    <label>성함</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div>
+                    <label>연락처 (이메일)</label>
+                    <input type="email" name="email" required>
+                </div>
+            </div>
+
+            <div class="form-row two-col">
+                <div>
+                    <label>카카오톡 ID (선택)</label>
+                    <input type="text" name="kakao">
+                </div>
+                <div>
+                    <label>인원</label>
+                    <input type="number" name="people" min="1" max="20">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label>희망 서비스</label>
+                <select name="service" required>
+                    <option value="">선택해주세요</option>
+                    <option value="interpretation">비즈니스 통역</option>
+                    <option value="vip">VIP 맞춤 가이딩 (와인·문학·미술·남불 등 테마형)</option>
+                    <option value="versailles">베르사유 궁전 VIP 투어</option>
+                    <option value="combo">통역 + 가이딩 결합</option>
+                    <option value="other">기타 / 상담</option>
+                </select>
+            </div>
+
+            <div class="form-row two-col">
+                <div>
+                    <label>희망 일자</label>
+                    <input type="date" name="date">
+                </div>
+                <div>
+                    <label>예상 소요 시간</label>
+                    <select name="duration">
+                        <option value="">선택</option>
+                        <option>1–2 시간</option>
+                        <option>반나절 (3–4시간)</option>
+                        <option>풀데이 (6–8시간)</option>
+                        <option>여러 날</option>
+                        <option>미정</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label>상세 내용 / 요청 사항</label>
+                <textarea name="message" placeholder="장소, 목적, 특별히 원하시는 점 등을 편하게 적어주세요."></textarea>
+            </div>
+
+            <button type="submit" class="form-submit">견적 요청 보내기</button>
+
+            <p class="form-note">제출하신 정보는 견적 회신 외 다른 용도로 사용되지 않으며, RGPD 규정에 따라 안전하게 관리됩니다.</p>
+
+            <div class="form-success" id="formSuccess">
+                견적 요청이 전송되었습니다.<br>
+                24시간 내에 입력하신 이메일로 답신드리겠습니다. 감사합니다.
+            </div>
+        </form>
+    </div>
+</section>
+
+</Site>

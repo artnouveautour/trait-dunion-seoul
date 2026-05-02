@@ -1,0 +1,44 @@
+---
+export const prerender = false;
+import Site from '../../layouts/Site.astro';
+import { isAuthenticated } from '../../lib/auth';
+
+const env = (Astro.locals as any).runtime?.env as ENV | undefined;
+let authed = false;
+if (env?.AUTH_SECRET) {
+  authed = await isAuthenticated(env.AUTH_SECRET, Astro.request, env.ADMIN_EMAIL || '');
+}
+if (!authed) {
+  return Astro.redirect('/admin/login');
+}
+---
+<Site
+  title="어드민 — Trait d'Union Séoul"
+  description="운영자 전용 페이지"
+>
+
+<main class="legal-content" style="padding-top:8rem;">
+  <div class="legal-eyebrow">Admin</div>
+  <h1>운영자 <span class="it">대시보드</span></h1>
+
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1.2rem; margin-top:2rem;">
+    <a href="/admin/bookings" class="legal-info" style="display:block; text-decoration:none; color:var(--ink); border-left-color:var(--gold);">
+      <h2 style="margin:0 0 0.4rem; font-size:1.3rem; font-family:'Cormorant Garamond',serif; font-weight:500;">예약 관리</h2>
+      <p style="margin:0; font-size:0.9rem; color:var(--ink-soft);">손님 견적 요청부터 예약확인증 발송까지 워크플로우 관리.</p>
+    </a>
+    <a href="/admin/reviews" class="legal-info" style="display:block; text-decoration:none; color:var(--ink); border-left-color:var(--gold);">
+      <h2 style="margin:0 0 0.4rem; font-size:1.3rem; font-family:'Cormorant Garamond',serif; font-weight:500;">후기 승인</h2>
+      <p style="margin:0; font-size:0.9rem; color:var(--ink-soft);">제출된 후기를 검토하고 승인/거부합니다.</p>
+    </a>
+    <a href="/admin/tokens" class="legal-info" style="display:block; text-decoration:none; color:var(--ink); border-left-color:var(--gold);">
+      <h2 style="margin:0 0 0.4rem; font-size:1.3rem; font-family:'Cormorant Garamond',serif; font-weight:500;">후기 토큰 발급</h2>
+      <p style="margin:0; font-size:0.9rem; color:var(--ink-soft);">투어 후 손님에게 보낼 후기 작성 링크를 만듭니다.</p>
+    </a>
+  </div>
+
+  <p style="margin-top:3rem;">
+    <a href="/api/auth/logout" class="cta-mini" style="background:var(--ink); color:var(--paper); text-decoration:none; padding:0.7rem 1.4rem; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase;">로그아웃</a>
+  </p>
+</main>
+
+</Site>
