@@ -1,19 +1,23 @@
 # Cloudflare Pages 설정.
 #
-# KV 바인딩과 비밀 환경변수는 wrangler.toml 이 아니라 Cloudflare 대시보드에서 관리:
-#   Pages 프로젝트 → Settings →
-#     - Functions → KV namespace bindings → Variable name: REVIEWS_KV (네임스페이스 선택)
-#     - Environment variables (Encrypted) → 다음 3개 비밀값 등록:
-#         RESEND_API_KEY  (Resend.com 발급)
-#         AUTH_SECRET      (random 32+ chars)
-#         TOKEN_SECRET     (random 32+ chars)
+# wrangler.toml 이 빌드 설정을 관리하므로 KV 바인딩도 여기에 둬야 함
+# (대시보드 바인딩 추가가 비활성화됨).
 #
-# wrangler.toml 의 [vars] 평문값은 빌드·런타임 모두 노출됨 (비밀 X).
+# 비밀 환경변수만 Cloudflare 대시보드에서 관리:
+#   Pages 프로젝트 → Settings → Environment variables (Encrypted) →
+#     RESEND_API_KEY  (Resend.com 발급)
+#     AUTH_SECRET     (random 32+ chars)
+#     TOKEN_SECRET    (random 32+ chars)
 
 name = "trait-dunion-seoul"
 compatibility_date = "2026-05-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "./dist"
+
+# KV 바인딩 — Cloudflare 대시보드에서 만든 네임스페이스의 ID
+[[kv_namespaces]]
+binding = "REVIEWS_KV"
+id = "12117768301b458a8e4f516c0c743b9c"
 
 # 평문 환경변수 (비밀 아님)
 [vars]
