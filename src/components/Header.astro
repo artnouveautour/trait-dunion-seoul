@@ -3,12 +3,13 @@ const { pathname } = Astro.url;
 const isPath = (p: string) =>
   pathname === p || pathname === p + '/' || pathname.startsWith(p + '/');
 const onAbout = isPath('/about');
+const onServices = isPath('/services');
 const onInterpretation = isPath('/interpretation');
 const onVip = isPath('/vip-guiding');
 const onVersailles = isPath('/versailles');
 const onFaq = isPath('/faq');
 const onContact = isPath('/contact');
-const onAnyService = onInterpretation || onVip || onVersailles;
+const onAnyService = onServices || onInterpretation || onVip || onVersailles;
 ---
 <header class="topbar" id="topbar">
   <a href="/" class="brand" style="display:flex; align-items:center; gap:0.8rem; text-decoration:none; color:var(--ink);">
@@ -27,8 +28,9 @@ const onAnyService = onInterpretation || onVip || onVersailles;
   <nav>
     <a href="/about" aria-current={onAbout ? 'page' : null}>소개</a>
     <span class="nav-dropdown">
-      <a href="/interpretation" aria-current={onAnyService ? 'page' : null}>서비스</a>
+      <a href="/services" aria-current={onAnyService ? 'page' : null}>서비스</a>
       <div class="nav-dropdown-menu">
+        <a href="/services" aria-current={onServices ? 'page' : null}>전체 보기</a>
         <a href="/interpretation" aria-current={onInterpretation ? 'page' : null}>비즈니스 통역</a>
         <a href="/vip-guiding" aria-current={onVip ? 'page' : null}>VIP 맞춤 가이딩</a>
         <a href="/versailles" aria-current={onVersailles ? 'page' : null}>베르사유</a>
