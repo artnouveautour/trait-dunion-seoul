@@ -31,7 +31,7 @@ const initialBlackoutDates = blackouts.map((b) => b.date);
   <p style="margin-bottom:1.4rem;"><a href="/admin" style="color:var(--sage-deep); text-decoration:none; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase;">← 대시보드</a></p>
   <div class="legal-eyebrow">Admin · Calendar</div>
   <h1>캘린더 <span class="it">차단 날짜</span></h1>
-  <p class="legal-meta">날짜를 클릭하면 차단/해제됩니다. 차단된 날짜는 손님 캘린더에서 선택할 수 없게 됩니다 (베르사유 페이지). 월요일은 자동 휴궁이라 별도 설정 불필요.</p>
+  <p class="legal-meta">날짜를 클릭하면 차단/해제됩니다. 차단된 날짜는 손님 캘린더에서 선택할 수 없게 됩니다 (베르사유 페이지). 월요일은 자동 휴관이라 별도 설정 불필요.</p>
 
   {kvError && <p class="legal-meta" style="background:#fee;padding:1rem;">⚠ {kvError}</p>}
 
@@ -47,7 +47,7 @@ const initialBlackoutDates = blackouts.map((b) => b.date);
     <div class="cal-grid" id="calGrid"></div>
     <div class="cal-legend">
       <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--paper);"></span>예약 가능</span>
-      <span class="cal-legend-item"><span class="cal-legend-dot dot-closed"></span>휴궁일 (월요일)</span>
+      <span class="cal-legend-item"><span class="cal-legend-dot dot-closed"></span>휴관일 (월요일)</span>
       <span class="cal-legend-item"><span class="cal-legend-dot" style="background:#a44;"></span>운영자 차단</span>
     </div>
   </div>

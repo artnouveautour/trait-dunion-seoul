@@ -63,7 +63,7 @@ import Site from '../layouts/Site.astro';
                     <h4>예약 안내</h4>
                     <div class="svc-detail-row"><span>인원</span><span>그룹 투어 (인원 인당 ₩54,000)</span></div>
                     <div class="svc-detail-row"><span>미팅 장소</span><span>베르사유 궁전 VIP 게이트 B 앞 (예약 확정 후 정확한 위치·시간 안내)</span></div>
-                    <div class="svc-detail-row"><span>휴궁일</span><span>매주 월요일 (베르사유 휴궁 — 예약 불가)</span></div>
+                    <div class="svc-detail-row"><span>휴관일</span><span>매주 월요일 (베르사유 휴궁 — 예약 불가)</span></div>
                     <div class="svc-detail-row"><span>준비물</span><span>편한 신발, 여권, 입장권 예매 확인서, 개인 이어폰(3.5mm 유선)</span></div>
                     <div class="svc-detail-row"><span>차량 필요시</span><span>3인 이상이라면 우버도 합리적. 별도 운송 회사 연결 가능</span></div>
 
@@ -97,7 +97,7 @@ import Site from '../layouts/Site.astro';
     <div class="booking-section-head reveal">
         <div class="section-eyebrow">Réservation</div>
         <h2>예약 <span class="it">하기</span></h2>
-        <p class="booking-subtitle">월요일은 베르사유 궁전 휴궁일입니다. 원하시는 날짜를 선택하시고 인원·연락처를 입력해주세요.</p>
+        <p class="booking-subtitle">월요일은 베르사유 궁전 휴관일입니다. 원하시는 날짜를 선택하시고 인원·연락처를 입력해주세요.</p>
     </div>
 
     <div class="booking-calendar reveal" id="bookingCalendar">
@@ -112,7 +112,7 @@ import Site from '../layouts/Site.astro';
         <div class="cal-grid" id="calGrid"></div>
         <div class="cal-legend">
             <span class="cal-legend-item"><span class="cal-legend-dot dot-available"></span>예약 가능</span>
-            <span class="cal-legend-item"><span class="cal-legend-dot dot-closed"></span>휴궁일 (월요일)</span>
+            <span class="cal-legend-item"><span class="cal-legend-dot dot-closed"></span>휴관일 (월요일)</span>
             <span class="cal-legend-item"><span class="cal-legend-dot dot-past"></span>지난 날짜</span>
         </div>
     </div>
@@ -246,7 +246,7 @@ import Site from '../layouts/Site.astro';
       } else if (isMonday) {
         cell = document.createElement('span');
         cell.className = 'cal-day cal-closed';
-        status = '휴궁일';
+        status = '휴관일';
       } else if (blackouts.has(ymd(d))) {
         cell = document.createElement('span');
         cell.className = 'cal-day cal-closed';
