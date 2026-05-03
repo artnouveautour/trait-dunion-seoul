@@ -2370,3 +2370,32 @@ a.svc-toggle.open::after { transform: none; }
 em { font-style: normal; font-weight: 700; color: var(--gold); }
 
 /* 강조 색상 헤딩 안 .it 등은 기본 sage-deep 또는 gold (기존 색 유지) */
+/* ─────────────────────  HEADING SIZE — UNIFIED DOWNSCALE  ─────────────────────
+   모든 큰 H1·H2 를 같은 크기로 통일 (사이트 위계 일관 + 차분).
+   본문·작은 헤딩·카드 타이틀(svc-title)·헤더는 그대로 유지. */
+.hero h1,
+.about h2,
+.services-head h2,
+.testimonials-head h2,
+.faq-head h2,
+.process-head h2,
+.contact-left h2,
+.feature h2,
+.b2b-text h2,
+.booking-section h2,
+.legal-content h1 {
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem) !important;
+    line-height: 1.25;
+}
+.hero h1 { margin-bottom: 1rem; }
+.hero h1 .ko {
+    font-size: 0.5em;  /* hero h1 내 한글 부제 — 헤딩에 비례 축소 */
+}
+
+/* 그 외 작은 H2/H3 — 약간만 축소 */
+.legal-content h2 {
+    font-size: 1.1rem !important;
+}
+.refs-title {
+    font-size: 1.1rem !important;
+}
