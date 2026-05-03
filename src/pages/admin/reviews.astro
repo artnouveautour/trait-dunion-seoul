@@ -51,7 +51,7 @@ function star(n: number) {
         <strong>{r.name}</strong>
         <span style="color:var(--gold); letter-spacing:0.1em;">{star(r.rating)}</span>
       </div>
-      <p style="font-family:'EB Garamond', serif; font-style:italic; font-size:0.85rem; color:var(--sage-deep); margin-bottom:0.6rem;">{r.serviceLabel} · {r.tourDate} · 제출 {new Date(r.submittedAt).toLocaleDateString('ko-KR')}</p>
+      <p style="font-family:'Noto Sans KR', sans-serif; font-style: normal; font-size:0.85rem; color:var(--sage-deep); margin-bottom:0.6rem;">{r.serviceLabel} · {r.tourDate} · 제출 {new Date(r.submittedAt).toLocaleDateString('ko-KR')}</p>
       <p style="margin-bottom:1rem; white-space:pre-wrap;">{r.text}</p>
       <div style="display:flex; gap:0.6rem;">
         <button type="button" class="approve-btn" data-action="approve" data-id={r.id} style="background:var(--sage-deep); color:var(--paper); border:none; padding:0.6rem 1.2rem; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; cursor:pointer;">승인</button>
@@ -68,7 +68,7 @@ function star(n: number) {
         <strong>{r.name}</strong>
         <span style="color:var(--gold); letter-spacing:0.1em;">{star(r.rating)}</span>
       </div>
-      <p style="font-family:'EB Garamond', serif; font-style:italic; font-size:0.85rem; color:var(--sage-deep); margin-bottom:0.6rem;">{r.serviceLabel} · {r.tourDate} · 승인 {r.approvedAt ? new Date(r.approvedAt).toLocaleDateString('ko-KR') : ''}</p>
+      <p style="font-family:'Noto Sans KR', sans-serif; font-style: normal; font-size:0.85rem; color:var(--sage-deep); margin-bottom:0.6rem;">{r.serviceLabel} · {r.tourDate} · 승인 {r.approvedAt ? new Date(r.approvedAt).toLocaleDateString('ko-KR') : ''}</p>
       <p style="white-space:pre-wrap; font-size:0.92rem;">{r.text}</p>
     </div>
   ))}

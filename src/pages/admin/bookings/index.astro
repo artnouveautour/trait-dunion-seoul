@@ -37,8 +37,8 @@ function fmt(d?: string) {
 
   {BOOKING_STATUS_ORDER.map((s) => (
     <section style="margin-top:2.4rem;">
-      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:1.4rem;margin-bottom:1rem;">
-        {BOOKING_STATUS_LABEL[s]} <span style="color:var(--sage-deep); font-size:1rem; font-style:italic;">({(bookings[s] || []).length})</span>
+      <h2 style="font-family:'Noto Sans KR', sans-serif;font-weight:500;font-size:1.4rem;margin-bottom:1rem;">
+        {BOOKING_STATUS_LABEL[s]} <span style="color:var(--sage-deep); font-size:1rem; font-style: normal;">({(bookings[s] || []).length})</span>
       </h2>
       {(bookings[s] || []).length === 0 ? (
         <p style="color:var(--ink-soft); font-size:0.9rem;">없음</p>
@@ -49,7 +49,7 @@ function fmt(d?: string) {
               <div style="display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
                 <div>
                   <strong>{b.name}</strong>
-                  <span style="font-family:'EB Garamond',serif; font-style:italic; color:var(--sage-deep); margin-left:0.6rem; font-size:0.9rem;">
+                  <span style="font-family:'Noto Sans KR', sans-serif; font-style: normal; color:var(--sage-deep); margin-left:0.6rem; font-size:0.9rem;">
                     {b.serviceLabel}{b.date ? ' · ' + b.date : ''}
                   </span>
                 </div>

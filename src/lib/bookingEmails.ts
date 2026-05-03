@@ -2,12 +2,12 @@
 import type { Booking } from './bookings';
 
 const BASE_STYLE = "font-family:Arial,'Noto Sans KR',sans-serif;line-height:1.7;color:#1a2238;max-width:560px;margin:0 auto;padding:24px;background:#faf7f0;";
-const HEADING = "font-family:Georgia,serif;font-weight:400;font-size:1.4rem;margin:0 0 16px;color:#1a2238;";
-const SUB = "font-style:italic;color:#4a5a4d;margin:0 0 16px;";
+const HEADING = "font-family:'Noto Sans KR', sans-serif;font-weight:400;font-size:1.4rem;margin:0 0 16px;color:#1a2238;";
+const SUB = "font-style: normal;color:#4a5a4d;margin:0 0 16px;";
 const TABLE = "width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.9rem;";
-const TD_LABEL = "padding:6px 10px;border-bottom:1px solid rgba(26,34,56,0.12);color:#4a5a4d;font-style:italic;width:140px;vertical-align:top;";
+const TD_LABEL = "padding:6px 10px;border-bottom:1px solid rgba(26,34,56,0.12);color:#4a5a4d;font-style: normal;width:140px;vertical-align:top;";
 const TD_VALUE = "padding:6px 10px;border-bottom:1px solid rgba(26,34,56,0.12);color:#1a2238;";
-const FOOT = "margin-top:24px;padding-top:16px;border-top:1px solid rgba(26,34,56,0.12);font-size:0.78rem;color:#4a5a4d;font-style:italic;";
+const FOOT = "margin-top:24px;padding-top:16px;border-top:1px solid rgba(26,34,56,0.12);font-size:0.78rem;color:#4a5a4d;font-style: normal;";
 
 export function quoteEmail(booking: Booking): { subject: string; html: string; text: string } {
   const q = booking.quote!;

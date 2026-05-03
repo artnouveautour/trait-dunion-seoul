@@ -19,18 +19,18 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
     background: var(--paper);
     color: var(--ink);
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.7;
     overflow-x: hidden;
 }
 
 .serif {
-    font-family: 'Cormorant Garamond', 'EB Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .italic {
-    font-style: italic;
-    font-family: 'EB Garamond', serif;
+    font-style: normal;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 /* ─────────────────────  TOP BAR  ───────────────────── */
@@ -56,7 +56,7 @@ body {
 }
 
 .brand {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-weight: 500;
     font-size: 1.35rem;
     letter-spacing: 0.04em;
@@ -150,7 +150,7 @@ body {
 }
 
 .hero h1 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: clamp(2.8rem, 5.5vw, 4.6rem);
     font-weight: 400;
     line-height: 1.05;
@@ -162,10 +162,10 @@ body {
 }
 
 .hero h1 .accent {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
     font-weight: 400;
-    font-size: 0.5em;
+
     display: inline-block;
     margin-top: 0.4rem;
 }
@@ -283,7 +283,7 @@ body {
     font-size: 1.15rem;
     line-height: 1.4;
     color: var(--ink);
-    font-style: italic;
+    font-style: normal;
 }
 
 .hero-art-quote small {
@@ -315,7 +315,7 @@ body {
 .stat-item:last-child { border-right: none; }
 
 .stat-num {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 3rem;
     font-weight: 400;
     line-height: 1;
@@ -324,7 +324,7 @@ body {
 }
 
 .stat-num .plus {
-    font-style: italic;
+    font-style: normal;
     color: var(--gold);
     font-size: 0.7em;
 }
@@ -366,7 +366,7 @@ body {
 }
 
 .about h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 2.6rem;
     font-weight: 400;
     line-height: 1.15;
@@ -375,9 +375,9 @@ body {
 }
 
 .about h2 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 
@@ -389,7 +389,7 @@ body {
 }
 
 .about-body p:first-child::first-letter {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 3.6rem;
     float: left;
     line-height: 0.9;
@@ -402,8 +402,8 @@ body {
     margin-top: 2rem;
     padding-top: 2rem;
     border-top: 1px solid var(--rule);
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     font-size: 1.4rem;
     color: var(--ink);
 }
@@ -433,9 +433,9 @@ body {
 }
 
 .refs-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.5rem;
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
     margin-bottom: 0.5rem;
 }
@@ -457,7 +457,7 @@ body {
 }
 
 .ref-cell {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.4rem;
     color: var(--ink);
     padding: 1rem 0;
@@ -472,8 +472,8 @@ body {
     margin-top: 2rem;
     font-size: 0.8rem;
     color: var(--sage-deep);
-    font-style: italic;
-    font-family: 'EB Garamond', serif;
+    font-style: normal;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 /* ─────────────────────  SERVICES  ───────────────────── */
@@ -490,7 +490,7 @@ body {
 }
 
 .services-head h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: clamp(2.2rem, 4vw, 3rem);
     font-weight: 400;
     line-height: 1.15;
@@ -499,9 +499,9 @@ body {
 }
 
 .services-head h2 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 
@@ -559,8 +559,8 @@ body {
 }
 
 .svc-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     font-size: 0.95rem;
     color: var(--gold);
     margin-bottom: 0.7rem;
@@ -568,7 +568,7 @@ body {
 }
 
 .svc-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.85rem;
     font-weight: 500;
     color: var(--ink);
@@ -577,8 +577,8 @@ body {
 }
 
 .svc-title-fr {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     font-size: 1rem;
     color: var(--sage-deep);
     margin-bottom: 1.4rem;
@@ -625,7 +625,7 @@ body {
 }
 
 .svc-price {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.8rem;
     color: var(--ink);
     font-weight: 500;
@@ -641,8 +641,8 @@ body {
 }
 
 .svc-price-inquire {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
     font-size: 1.05rem;
 }
@@ -685,7 +685,7 @@ body {
 
 .svc-toggle::after {
     content: '+';
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.4rem;
     font-weight: 300;
     line-height: 1;
@@ -713,8 +713,8 @@ body {
 }
 
 .svc-detail h4 {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     font-size: 1rem;
     color: var(--gold);
     margin-bottom: 0.7rem;
@@ -764,8 +764,8 @@ body {
 }
 
 .svc-detail-row span:first-child {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
 }
 
@@ -806,7 +806,7 @@ body {
 }
 
 .testimonials-head h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 2.6rem;
     font-weight: 400;
     color: var(--ink);
@@ -814,9 +814,9 @@ body {
 }
 
 .testimonials-head h2 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 
@@ -844,11 +844,11 @@ body {
     position: absolute;
     top: -10px;
     left: 20px;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 5rem;
     color: var(--gold);
     line-height: 1;
-    font-style: italic;
+    font-style: normal;
 }
 
 .testimonial-stars {
@@ -859,12 +859,12 @@ body {
 }
 
 .testimonial-text {
-    font-family: 'EB Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.05rem;
     line-height: 1.75;
     color: var(--ink-soft);
     margin-bottom: 1.5rem;
-    font-style: italic;
+    font-style: normal;
 }
 
 .testimonial-author {
@@ -883,8 +883,8 @@ body {
 }
 
 .testimonial-author span {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
     font-size: 0.8rem;
 }
@@ -902,7 +902,7 @@ body {
 }
 
 .faq-head h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 2.6rem;
     font-weight: 400;
     color: var(--ink);
@@ -910,9 +910,9 @@ body {
 }
 
 .faq-head h2 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 
@@ -934,7 +934,7 @@ body {
 .faq-question:hover { color: var(--gold); }
 
 .faq-q-text {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.3rem;
     font-weight: 500;
     color: var(--ink);
@@ -943,7 +943,7 @@ body {
 }
 
 .faq-toggle-icon {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.8rem;
     font-weight: 300;
     color: var(--gold);
@@ -979,7 +979,7 @@ body {
 .faq-answer-inner p:last-child { margin-bottom: 0; }
 
 .faq-answer-inner em {
-    font-family: 'EB Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     color: var(--sage-deep);
 }
 
@@ -1020,7 +1020,7 @@ body {
 }
 
 .b2b-text h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 2.4rem;
     font-weight: 400;
     color: var(--ink);
@@ -1029,9 +1029,9 @@ body {
 }
 
 .b2b-text h2 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 
@@ -1123,8 +1123,8 @@ body {
     position: absolute;
     top: -2rem;
     right: -1rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     font-size: 18rem;
     color: rgba(245, 240, 232, 0.04);
     line-height: 1;
@@ -1151,7 +1151,7 @@ body {
 }
 
 .feature h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: clamp(2.2rem, 4vw, 3.2rem);
     line-height: 1.1;
     margin-bottom: 1.5rem;
@@ -1160,9 +1160,9 @@ body {
 }
 
 .feature h2 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--gold);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 
@@ -1190,8 +1190,8 @@ body {
 }
 
 .feature-detail li span:first-child {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--gold);
 }
 
@@ -1249,16 +1249,16 @@ body {
 }
 
 .process-head h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 2.6rem;
     font-weight: 400;
     color: var(--ink);
 }
 
 .process-head h2 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 
@@ -1296,8 +1296,8 @@ body {
     align-items: center;
     justify-content: center;
     margin: 0 auto 1.4rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     font-size: 1.4rem;
     color: var(--gold);
     transition: all 0.4s;
@@ -1311,7 +1311,7 @@ body {
 }
 
 .step-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.3rem;
     font-weight: 500;
     margin-bottom: 0.6rem;
@@ -1342,7 +1342,7 @@ body {
 }
 
 .contact-left h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 2.8rem;
     line-height: 1.1;
     font-weight: 400;
@@ -1351,9 +1351,9 @@ body {
 }
 
 .contact-left h2 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 
@@ -1379,8 +1379,8 @@ body {
 }
 
 .contact-info-row span:first-child {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--gold);
     font-size: 0.9rem;
 }
@@ -1477,8 +1477,8 @@ body {
     color: var(--ink-soft);
     margin-top: 1.2rem;
     line-height: 1.7;
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
 }
 
 .form-success {
@@ -1515,7 +1515,7 @@ footer {
 }
 
 .footer-brand {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.7rem;
     line-height: 1.2;
     margin-bottom: 1rem;
@@ -1532,8 +1532,8 @@ footer {
 }
 
 .footer-tagline {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: rgba(245, 240, 232, 0.7);
     font-size: 1rem;
     line-height: 1.6;
@@ -1542,8 +1542,8 @@ footer {
 }
 
 .footer-col h4 {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     font-size: 0.95rem;
     color: var(--gold);
     margin-bottom: 1rem;
@@ -1655,28 +1655,28 @@ footer {
     background: var(--sage-deep);
 }
 .legal-content h1 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 3rem;
     font-weight: 400;
     line-height: 1.1;
     margin-bottom: 0.6rem;
 }
 .legal-content h1 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 .legal-meta {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
     margin-bottom: 3rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--rule);
 }
 .legal-content h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.6rem;
     font-weight: 500;
     color: var(--ink);
@@ -1686,8 +1686,8 @@ footer {
     border-bottom: 1px solid var(--rule);
 }
 .legal-content h3 {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     font-size: 1.15rem;
     color: var(--gold);
     margin-top: 1.8rem;
@@ -1745,13 +1745,13 @@ footer {
 }
 .legal-info-row:last-child { border-bottom: none; }
 .legal-info-row span:first-child {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
 }
 .legal-placeholder {
     color: rgba(26, 34, 56, 0.4);
-    font-style: italic;
+    font-style: normal;
 }
 .rights-grid {
     display: grid;
@@ -1765,8 +1765,8 @@ footer {
     border-left: 2px solid var(--gold);
 }
 .right-card h3 {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     font-size: 1.05rem;
     color: var(--ink);
     margin-bottom: 0.5rem;
@@ -1894,7 +1894,7 @@ a.svc-toggle.open::after { transform: none; }
     margin-bottom: 2.5rem;
 }
 .booking-section h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 2.4rem;
     font-weight: 400;
     line-height: 1.15;
@@ -1902,14 +1902,14 @@ a.svc-toggle.open::after { transform: none; }
     margin-bottom: 0.8rem;
 }
 .booking-section h2 .it {
-    font-style: italic;
+    font-style: normal;
     color: var(--sage-deep);
-    font-size: 0.5em;
+
     display: inline-block;
 }
 .booking-subtitle {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
     font-size: 1rem;
     line-height: 1.6;
@@ -1936,7 +1936,7 @@ a.svc-toggle.open::after { transform: none; }
     width: 34px;
     height: 34px;
     cursor: pointer;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.4rem;
     line-height: 1;
     transition: all 0.3s;
@@ -1951,7 +1951,7 @@ a.svc-toggle.open::after { transform: none; }
     cursor: not-allowed;
 }
 .cal-month-label {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.4rem;
     color: var(--ink);
     min-width: 150px;
@@ -1982,7 +1982,7 @@ a.svc-toggle.open::after { transform: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'EB Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.95rem;
     color: var(--ink);
     border: 1px solid var(--rule);
@@ -2045,8 +2045,8 @@ a.svc-toggle.open::after { transform: none; }
 .cal-foot {
     margin-top: 1.6rem;
     text-align: center;
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
     font-size: 0.92rem;
     line-height: 1.6;
@@ -2090,15 +2090,15 @@ a.svc-toggle.open::after { transform: none; }
     border-bottom: 1px solid var(--rule);
 }
 .booking-options-head h3 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.5rem;
     font-weight: 500;
     color: var(--ink);
     margin: 0;
 }
 .booking-options-head .selected-date {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
     font-size: 1.1rem;
 }
@@ -2160,7 +2160,7 @@ a.svc-toggle.open::after { transform: none; }
     color: var(--ink);
     width: 40px;
     height: 40px;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.4rem;
     cursor: pointer;
     transition: background 0.2s;
@@ -2178,7 +2178,7 @@ a.svc-toggle.open::after { transform: none; }
     border: none;
     background: transparent;
     text-align: center;
-    font-family: 'EB Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.05rem;
     color: var(--ink);
     pointer-events: none;
@@ -2191,8 +2191,8 @@ a.svc-toggle.open::after { transform: none; }
 .qty-hint {
     display: inline-block;
     margin-left: 0.8rem;
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
     font-size: 0.85rem;
 }
@@ -2214,7 +2214,7 @@ a.svc-toggle.open::after { transform: none; }
     cursor: pointer;
     text-align: center;
     transition: all 0.25s;
-    font-family: 'EB Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1rem;
     color: var(--ink);
 }
@@ -2259,7 +2259,7 @@ a.svc-toggle.open::after { transform: none; }
     border-top: 1px solid var(--rule);
     margin-top: 0.4rem;
     padding-top: 0.7rem;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 1.3rem;
     color: var(--ink);
 }
@@ -2269,8 +2269,8 @@ a.svc-toggle.open::after { transform: none; }
 }
 .bo-summary-note {
     margin-top: 0.6rem;
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-style: normal;
     color: var(--sage-deep);
     font-size: 0.82rem;
     line-height: 1.5;
@@ -2314,3 +2314,59 @@ a.svc-toggle.open::after { transform: none; }
     margin-top: 0.8rem;
     font-size: 0.9rem;
 }
+/* ─────────────────────  TYPOGRAPHY OVERRIDE (산세리프 + 굵기 위계)  ─────────────────────
+   indigotravel.co.kr 톤 — 세리프/이탤릭 빼고 Noto Sans KR + 볼드로 위계 차별. */
+.hero h1, .about h2, .services-head h2, .testimonials-head h2,
+.faq-head h2, .b2b-text h2, .feature h2, .process-head h2,
+.contact-left h2, .legal-content h1, .booking-section h2,
+.svc-title, .footer-brand, .stat-num, .refs-title, .faq-q-text,
+.signature, .legal-content h2 {
+    font-weight: 600 !important;
+    letter-spacing: -0.01em;
+}
+.hero h1 { font-weight: 700 !important; }
+.legal-content h1 { font-weight: 700 !important; }
+.legal-content h3 { font-weight: 500 !important; }
+
+/* 헤딩 안 강조어 — 이탤릭 대신 색·굵기로 차별화 */
+.hero h1 .accent,
+.about h2 .it,
+.services-head h2 .it,
+.testimonials-head h2 .it,
+.faq-head h2 .it,
+.b2b-text h2 .it,
+.feature h2 .it,
+.process-head h2 .it,
+.contact-left h2 .it,
+.legal-content h1 .it,
+.booking-section h2 .it,
+.svc-title-fr {
+    font-weight: 700;
+    font-size: 1em;
+    font-style: normal;
+}
+
+/* eyebrow / 부제 / 캡션류 */
+.hero-eyebrow, .section-eyebrow, .feature-eyebrow,
+.svc-num, .testimonial-author span,
+.brand-sub, .footer-brand small {
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* 인용·시그니처류 */
+.hero-art-quote .serif, .testimonial-text, .footer-tagline,
+.refs-foot, .form-note, .booking-subtitle, .cal-foot,
+.bo-summary-note, .legal-meta {
+    font-style: normal;
+    font-weight: 400;
+}
+
+/* signature는 굵게 */
+.signature { font-weight: 600; font-style: normal; }
+
+/* italic 클래스가 아직 남아있다면 무력화 */
+.italic { font-style: normal; font-family: 'Noto Sans KR', sans-serif; }
+em { font-style: normal; font-weight: 700; color: var(--gold); }
+
+/* 강조 색상 헤딩 안 .it 등은 기본 sage-deep 또는 gold (기존 색 유지) */
