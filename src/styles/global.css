@@ -549,7 +549,7 @@ body {
 
 .svc-img-1 { background-image: url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1000&q=85'); }
 .svc-img-2 { background-image: url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1000&q=85'); }
-.svc-img-3 { background-image: url('https://images.unsplash.com/photo-1591289009723-aef022f3a48e?w=1000&q=85'); }
+.svc-img-3 { background-image: url('/images/versailles/card.jpg'); }
 
 .svc-body {
     padding: 2.4rem 2rem;
@@ -1201,8 +1201,8 @@ body {
 
 .feature-art {
     height: 500px;
-    background: url('https://images.unsplash.com/photo-1591622180650-3e8c8d23d34e?w=1200&q=85') center/cover;
-    filter: sepia(0.2) saturate(0.85);
+    background: url('/images/versailles/feature.jpg') center/cover;
+    filter: saturate(0.95);
     position: relative;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
 }
