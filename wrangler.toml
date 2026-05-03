@@ -20,8 +20,7 @@ binding = "REVIEWS_KV"
 id = "12117768301b458a8e4f516c0c743b9c"
 
 # 평문 환경변수 (비밀 아님)
-# 도메인 등록·Resend 도메인 인증 후 SITE_URL 과 EMAIL_FROM 을 자체 도메인으로 교체.
 [vars]
-SITE_URL = "https://trait-dunion-seoul.pages.dev"
+SITE_URL = "https://traitdunionseoul.com"
 ADMIN_EMAIL = "traitdunionseoul@gmail.com"
-EMAIL_FROM = "Trait d'Union Séoul <onboarding@resend.dev>"
+EMAIL_FROM = "Trait d'Union Séoul <noreply@traitdunionseoul.com>"
