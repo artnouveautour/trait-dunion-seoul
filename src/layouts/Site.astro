@@ -9,6 +9,26 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+
+const SITE_URL = 'https://traitdunionseoul.com';
+const canonicalURL = new URL(Astro.url.pathname, SITE_URL).href;
+const ogImage = new URL('/images/versailles/feature.jpg', SITE_URL).href;
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: "Trait d'Union Séoul",
+  description:
+    '25년 경력의 한국어-프랑스어 통역사가 제공하는 파리 비즈니스 통역과 VIP 문화 동행 서비스.',
+  url: SITE_URL,
+  email: 'contact@traitdunionseoul.com',
+  areaServed: 'Paris, France',
+  availableLanguage: ['ko', 'fr'],
+  sameAs: [
+    'https://www.instagram.com/traitdunionseoul/',
+    'https://www.youtube.com/@allartinfo',
+  ],
+});
 ---
 <!doctype html>
 <html lang="ko">
@@ -17,6 +37,21 @@ const { title, description } = Astro.props;
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{title}</title>
 <meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Trait d'Union Séoul" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:locale" content="ko_KR" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<script type="application/ld+json" set:html={jsonLd} />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
